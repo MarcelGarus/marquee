@@ -1,8 +1,6 @@
 # marquee
 
-A Flutter widget that scrolls its child infinitely.
-
-Supports vertical and horizontal scrolling as well as custom velocities.
+A Flutter widget that scrolls its child infinitely. Features vertical and horizontal scrolling as well as custom velocities.
 
 *Appreciate the widget? Show some ❤️ and star the repo to support the project.*
 
