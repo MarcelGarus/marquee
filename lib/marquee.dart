@@ -4,14 +4,14 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 /// A widget that scroll its child infinitely.
-/// 
+///
 /// It repeats the given child infinitely and automatically scrolls in the
 /// direction of the specified [scrollAxis] with the given [velocity].
-/// 
+///
 /// Between children, it leaves the given [blankSpace].
-/// 
+///
 /// ## Sample code
-/// 
+///
 /// This snippet scrolls the text infinitely in a horizontal direction:
 ///
 /// ```dart
@@ -20,37 +20,38 @@ import 'package:flutter/widgets.dart';
 ///   child: Text('There once was a boy who told this story about a boy: "'),
 /// )
 /// ```
-/// 
+///
 /// See also:
-/// 
+///
 /// * [ListView.builder], where by returning the same widget to the builder
 ///   every time, a similar result can be achieved without the automatic
 ///   scrolling and user's scrolling enabled.
-class Marquee extends StatefulWidget{
+class Marquee extends StatefulWidget {
   Marquee({
     Key key,
     @required this.child,
     this.scrollAxis = Axis.horizontal,
     this.blankSpace = 0.0,
     this.velocity = 50.0,
-  }) :
-      assert(child != null, "The Marquee's child cannot be null."),
-      assert(scrollAxis != null, "The Marquee's scrollAxis cannot be null."),
-      assert(blankSpace != null,
-        "The Marquee's blankSpace cannot be null. If you don't want any blank "
-        "space, set it to 0.0 instead."
-      ),
-      assert(!blankSpace.isNaN, "The Marquee's blankSpace cannot be NaN."),
-      assert(blankSpace >= 0, "The Marquee's blankSpace needs to be positive."),
-      assert(blankSpace.isFinite, "The Marquee's blankSpace needs to be finite."),
-      assert(velocity != null, "The Marquee's velocity cannot be null."),
-      assert(!velocity.isNaN, "The Marquee's velocity cannot be NaN."),
-      assert(velocity > 0.0,
-        "For now, the Marquee's velocity needs to be positive.\n"
-        "Keep the package up to date for further updates, where this may change."
-      ),
-      assert(velocity.isFinite, "The Marquee's velocity needs to be finite."),
-      super(key: key);
+  })  : assert(child != null, "The Marquee's child cannot be null."),
+        assert(scrollAxis != null, "The Marquee's scrollAxis cannot be null."),
+        assert(
+            blankSpace != null,
+            "The Marquee's blankSpace cannot be null. If you don't want any blank "
+            "space, set it to 0.0 instead."),
+        assert(!blankSpace.isNaN, "The Marquee's blankSpace cannot be NaN."),
+        assert(
+            blankSpace >= 0, "The Marquee's blankSpace needs to be positive."),
+        assert(blankSpace.isFinite,
+            "The Marquee's blankSpace needs to be finite."),
+        assert(velocity != null, "The Marquee's velocity cannot be null."),
+        assert(!velocity.isNaN, "The Marquee's velocity cannot be NaN."),
+        assert(
+            velocity > 0.0,
+            "For now, the Marquee's velocity needs to be positive.\n"
+            "Keep the package up to date for further updates, where this may change."),
+        assert(velocity.isFinite, "The Marquee's velocity needs to be finite."),
+        super(key: key);
 
   /// The Marquee's [child] that is displayed scrolling by and is rendered
   /// repeatedly.
@@ -99,9 +100,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       position += widget.velocity;
 
       controller.animateTo(position,
-        duration: Duration(seconds: 1),
-        curve: Curves.linear
-      );
+          duration: Duration(seconds: 1), curve: Curves.linear);
     });
   }
 
@@ -109,16 +108,19 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   /// Builds the marquee.
   @override
-  Widget build(BuildContext context) => ListView.builder(
-    controller: controller,
-    scrollDirection: widget.scrollAxis,
-    physics: NeverScrollableScrollPhysics(),
-    itemBuilder: (_, i) => i.isEven ? widget.child : _buildBlankSpace()
-  );
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        controller: controller,
+        scrollDirection: widget.scrollAxis,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (_, i) => i.isEven ? widget.child : _buildBlankSpace());
+  }
 
   /// Builds the blank space between children.
-  Widget _buildBlankSpace() => SizedBox(
-    width: widget.scrollAxis == Axis.horizontal ? widget.blankSpace : null,
-    height: widget.scrollAxis == Axis.vertical ? widget.blankSpace : null,
-  );
+  Widget _buildBlankSpace() {
+    return SizedBox(
+      width: widget.scrollAxis == Axis.horizontal ? widget.blankSpace : null,
+      height: widget.scrollAxis == Axis.vertical ? widget.blankSpace : null,
+    );
+  }
 }
