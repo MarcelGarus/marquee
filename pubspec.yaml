@@ -1,8 +1,8 @@
 name: marquee
 description: A new flutter package project.
 version: 0.0.1
-author:
-homepage:
+author: Marcel Garus
+homepage: https://github.com/marcelgarus/marquee
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
