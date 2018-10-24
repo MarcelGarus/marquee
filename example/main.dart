@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
           padding: EdgeInsets.only(top: 50.0),
           children: <Widget>[
             _buildMarquee(),
-            _buildVerticalMarquee(),
-            _buildMarqueeWithBlankSpace(),
-            _buildFastMarquee()
+            //_buildVerticalMarquee(),
+            //_buildMarqueeWithBlankSpace(),
+            //_buildFastMarquee()
           ].map((marquee) {
             return Padding(
               padding: EdgeInsets.all(16.0),
@@ -34,28 +34,28 @@ class MyApp extends StatelessWidget {
 
   Widget _buildMarquee() {
     return Marquee(
-      child: Text('There once was a boy who told this story about a boy: "'),
+      text: 'There once was a boy who told this story about a boy: "',
     );
   }
 
   Widget _buildVerticalMarquee() {
     return Marquee(
       scrollAxis: Axis.vertical,
-      child: Text("Look what's below this:"),
+      text: "Look what's below this:",
     );
   }
 
   Widget _buildMarqueeWithBlankSpace() {
     return Marquee(
       blankSpace: 300.0,
-      child: Text('Wait for it...'),
+      text: 'Wait for it...',
     );
   }
 
   Widget _buildFastMarquee() {
     return Marquee(
       velocity: 1000.0,
-      child: Text('Gotta go faaaaaast...'),
+      text: 'Gotta go faaaaaast...',
     );
   }
 }

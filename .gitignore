@@ -8,6 +8,7 @@
 *.lock
 
 build/
+android/
 ios/.generated/
 ios/Flutter/Generated.xcconfig
 ios/Runner/GeneratedPluginRegistrant.*
