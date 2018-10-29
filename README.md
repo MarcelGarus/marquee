@@ -1,60 +1,46 @@
 # marquee
 
-A Flutter widget that scrolls its child infinitely. Features vertical and horizontal scrolling as well as custom velocities.
+⏩ A Flutter widget that scrolls text infinitely. Provides many customizations
+including custom scroll directions and velocities, pausing after every round
+and specifying custom durations and curves for accelerating and decelerating.
 
 *Appreciate the widget? Show some ❤️ and star the repo to support the project.*
 
-## Resources
-
 - [Pub Package](https://pub.dartlang.org/packages/marquee)
 - [GitHub Repository](https://github.com/marcelgarus/marquee)
+- [API reference](https://pub.dartlang.org/documentation/marquee/)
 
 ## Usage
 
-The Marquee repeats its child over and over and scrolls it automatically.
+This is a minimalistic example:
 
 ```dart
 Marquee(
-  child: Text('There once was a boy who told this story about a boy: "'),
+  text: 'There once was a boy who told this story about a boy: "',
 )
 ```
 
-### scrollAxis
-
-While normally, the `Marquee` scrolls horizontally, by setting the `scrollAxis`
-property to either `Axis.horizontal` or `Axis.vertical`, you can specify the
-direction in which the `Marquee` scrolls.
+And here's a piece of code that makes full use of the marquee's
+customizability:
 
 ```dart
 Marquee(
-  scrollAxis: Axis.vertical,
-  child: Text("Look what's below this:"),
+  text: 'Some sample text that takes some space.',
+  style: TextStyle(fontWeight: FontWeight.bold),
+  scrollAxis: Axis.horizontal,
+  blankSpace: 20.0,
+  velocity: 100.0,
+  pauseAfterRound: Duration(seconds: 1),
+  startPadding: 10.0,
+  accelerationDuration: Duration(seconds: 1),
+  accelerationCurve: Curves.linear,
+  decelerationDuration: Duration(milliseconds: 500),
+  decelerationCurve: Curves.easeOut,
 )
 ```
 
-### blankSpace
-
-If you want to have some space between the children, there's a `blankSpace`
-property you can set:
-
-```dart
-Marquee(
-  blankSpace: 300.0,
-  child: Text('Wait for it...'),
-)
-```
-
-### velocity
-
-You can also customize the `velocity` the `Marquee` scrolls with. Just set the
-`velocity` parameter to any velocity in pixels per second.
-
-```dart
-Marquee(
-  velocity: 1000.0,
-  child: Text('Gotta go faaaaaast...'),
-)
-```
+For more information about the properties, have a look at the
+[API reference](https://pub.dartlang.org/documentation/marquee/).
 
 ## LICENSE
 

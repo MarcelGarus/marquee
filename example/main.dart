@@ -12,21 +12,10 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.deepOrange,
         body: ListView(
           padding: EdgeInsets.only(top: 50.0),
-          children: <Widget>[
+          children: [
             _buildMarquee(),
-            //_buildVerticalMarquee(),
-            //_buildMarqueeWithBlankSpace(),
-            //_buildFastMarquee()
-          ].map((marquee) {
-            return Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Container(
-                height: 50.0,
-                color: Colors.white,
-                child: marquee
-              )
-            );
-          }).toList(),
+            _buildComplexMarquee(),
+          ].map(_wrapWithStuff).toList(),
         )
       ),
     );
@@ -38,24 +27,30 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget _buildVerticalMarquee() {
+  Widget _buildComplexMarquee() {
     return Marquee(
-      scrollAxis: Axis.vertical,
-      text: "Look what's below this:",
+      text: 'Some sample text that takes some space.',
+      style: TextStyle(fontWeight: FontWeight.bold),
+      scrollAxis: Axis.horizontal,
+      blankSpace: 20.0,
+      velocity: 100.0,
+      pauseAfterRound: Duration(seconds: 1),
+      startPadding: 10.0,
+      accelerationDuration: Duration(seconds: 1),
+      accelerationCurve: Curves.linear,
+      decelerationDuration: Duration(milliseconds: 500),
+      decelerationCurve: Curves.easeOut,
     );
   }
 
-  Widget _buildMarqueeWithBlankSpace() {
-    return Marquee(
-      blankSpace: 300.0,
-      text: 'Wait for it...',
-    );
-  }
-
-  Widget _buildFastMarquee() {
-    return Marquee(
-      velocity: 1000.0,
-      text: 'Gotta go faaaaaast...',
+  Widget _wrapWithStuff(Widget child) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Container(
+        height: 50.0,
+        color: Colors.white,
+        child: child
+      )
     );
   }
 }

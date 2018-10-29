@@ -1,6 +1,9 @@
 name: marquee
-description: '⏩ A Flutter widget that scrolls its child infinitely. Features vertical and horizontal scrolling as well as custom velocities.'
-version: 0.1.0
+description: '⏩ A Flutter widget that scrolls text infinitely. Provides many
+  customizations including custom scroll directions and velocities, pausing
+  after every round and specifying custom durations and curves for accelerating
+  and decelerating.'
+version: 1.0.0
 author: Marcel Garus <marcel.garus@gmail.com>
 homepage: https://github.com/marcelgarus/marquee
 
