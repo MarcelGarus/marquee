@@ -431,7 +431,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     _initialize();
     Future.delayed(Duration.zero, () {
       Future.doWhile(_scroll);
-      print('Scrolling finished.');
+      //print('Scrolling finished.');
     });
   }
 
