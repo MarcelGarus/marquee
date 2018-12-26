@@ -431,7 +431,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     _initialize();
     Future.delayed(Duration.zero, () {
       Future.doWhile(_scroll);
-      print('Scrolling finished.');
+      //print('Scrolling finished.');
     });
   }
 
@@ -444,7 +444,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    print('Did update widget called');
+    //print('Did update widget called');
     
     // If any parameters of the widget changed, recalculate the values and
     // start scrolling from the start, just as if the widget was created
@@ -463,7 +463,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   // Calculates all necessary values for animating, then starts the animation.
   void _initialize() {
-    print('Initializing');
+    //print('Initializing');
 
     // Calculate lengths (amount of pixels that each phase needs).
     final totalLength = _getTextWidth() + widget.blankSpace;
@@ -497,18 +497,18 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       "* Decrease the velocity, so the duration to animate within is longer.\n"
     );
 
-    /*print('Total length: $totalLength');
-    print('Start position: $_startPosition');
-    print('Acceleration length: $accelerationLength');
-    print('Acceleration target: $_accelerationTarget');
-    print('Linear length: $linearLength');
-    print('Linear target: $_linearTarget');
-    print('Deceleration length: $decelerationLength');
-    print('Deceleration target: $_decelerationTarget');
-    print('Acceleration duration: $_accelerationDuration');
-    print('Linear duration: $_linearDuration');
-    print('Deceleration duration: $_decelerationDuration');
-    print('Total duration: $_totalDuration');*/
+    /*//print('Total length: $totalLength');
+    //print('Start position: $_startPosition');
+    //print('Acceleration length: $accelerationLength');
+    //print('Acceleration target: $_accelerationTarget');
+    //print('Linear length: $linearLength');
+    //print('Linear target: $_linearTarget');
+    //print('Deceleration length: $decelerationLength');
+    //print('Deceleration target: $_decelerationTarget');
+    //print('Acceleration duration: $_accelerationDuration');
+    //print('Linear duration: $_linearDuration');
+    //print('Deceleration duration: $_decelerationDuration');
+    //print('Total duration: $_totalDuration');*/
   }
 
 
