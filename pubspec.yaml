@@ -3,7 +3,7 @@ description: '⏩ A Flutter widget that scrolls text infinitely. Provides many
   customizations including custom scroll directions and velocities, pausing
   after every round and specifying custom durations and curves for accelerating
   and decelerating.'
-version: 1.0.0
+version: 1.1.0
 author: Marcel Garus <marcel.garus@gmail.com>
 homepage: https://github.com/marcelgarus/marquee
 

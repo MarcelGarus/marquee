@@ -9,15 +9,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Marquee',
       home: Scaffold(
-        backgroundColor: Colors.deepOrange,
-        body: ListView(
-          padding: EdgeInsets.only(top: 50.0),
-          children: [
-            _buildMarquee(),
-            _buildComplexMarquee(),
-          ].map(_wrapWithStuff).toList(),
-        )
-      ),
+          backgroundColor: Colors.deepOrange,
+          body: ListView(
+            padding: EdgeInsets.only(top: 50.0),
+            children: [
+              _buildMarquee(),
+              _buildComplexMarquee(),
+            ].map(_wrapWithStuff).toList(),
+          )),
     );
   }
 
@@ -32,6 +31,7 @@ class MyApp extends StatelessWidget {
       text: 'Some sample text that takes some space.',
       style: TextStyle(fontWeight: FontWeight.bold),
       scrollAxis: Axis.horizontal,
+      crossAxisAlignment: CrossAxisAlignment.start,
       blankSpace: 20.0,
       velocity: 100.0,
       pauseAfterRound: Duration(seconds: 1),
@@ -46,11 +46,7 @@ class MyApp extends StatelessWidget {
   Widget _wrapWithStuff(Widget child) {
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: Container(
-        height: 50.0,
-        color: Colors.white,
-        child: child
-      )
+      child: Container(height: 50.0, color: Colors.white, child: child),
     );
   }
 }

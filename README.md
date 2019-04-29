@@ -28,6 +28,7 @@ Marquee(
   text: 'Some sample text that takes some space.',
   style: TextStyle(fontWeight: FontWeight.bold),
   scrollAxis: Axis.horizontal,
+  crossAxisAlignment: CrossAxisAlignment.start,
   blankSpace: 20.0,
   velocity: 100.0,
   pauseAfterRound: Duration(seconds: 1),

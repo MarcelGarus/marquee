@@ -1,3 +1,7 @@
+## [1.1.0] - 2019/04/29
+
+* Added support for cross axis alignment.
+
 ## [1.0.0] - 2018/10/29
 
 * Complete overhaul of the widget architecture. Now, no custom widget is
