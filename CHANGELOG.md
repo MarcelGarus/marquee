@@ -1,4 +1,4 @@
-## [1.1.0] - 2019/04/29
+## [1.2.0] - 2019/04/29
 
 * Added support for cross axis alignment.
 
