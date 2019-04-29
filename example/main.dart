@@ -9,14 +9,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Marquee',
       home: Scaffold(
-          backgroundColor: Colors.deepOrange,
-          body: ListView(
-            padding: EdgeInsets.only(top: 50.0),
-            children: [
-              _buildMarquee(),
-              _buildComplexMarquee(),
-            ].map(_wrapWithStuff).toList(),
-          )),
+        backgroundColor: Colors.deepOrange,
+        body: ListView(
+          padding: EdgeInsets.only(top: 50.0),
+          children: [
+            _buildMarquee(),
+            _buildComplexMarquee(),
+          ].map(_wrapWithStuff).toList(),
+        ),
+      ),
     );
   }
 
