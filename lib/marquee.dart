@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 /// A curve that represents the integral of another curve.
-/// 
+///
 /// The constructor takes an other curve and calculates the integral. The
 /// values of this curve are then being normalized onto the interval from 0 to
 /// 1, but the integration value can always be obtained using the [interval]
@@ -36,8 +36,7 @@ class _IntegralCurve extends Curve {
     values[1.0] = integral;
 
     // Normalize.
-    for (final double t in values.keys)
-      values[t] /= integral;
+    for (final double t in values.keys) values[t] /= integral;
 
     return _IntegralCurve._(original, integral, values);
   }
@@ -47,15 +46,11 @@ class _IntegralCurve extends Curve {
   double transform(double t) {
     if (t < 0) return 0.0;
 
-    for (final key in _values.keys)
-      if (key > t)
-        return _values[key];
+    for (final key in _values.keys) if (key > t) return _values[key];
 
     return 1.0;
   }
 }
-
-
 
 /// A widget that repeats text and automatically scrolls it infinitely.
 ///
@@ -68,10 +63,10 @@ class _IntegralCurve extends Curve {
 ///   text: 'There once was a boy who told this story about a boy: "',
 /// )
 /// ```
-/// 
+///
 /// And here's a piece of code that makes full use of the marquee's
 /// customizability:
-/// 
+///
 /// ```dart
 /// Marquee(
 ///   text: 'Some sample text that takes some space.',
@@ -99,6 +94,7 @@ class Marquee extends StatefulWidget {
     @required this.text,
     this.style,
     this.scrollAxis = Axis.horizontal,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.blankSpace = 0.0,
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
@@ -107,115 +103,129 @@ class Marquee extends StatefulWidget {
     Curve accelerationCurve = Curves.decelerate,
     this.decelerationDuration = Duration.zero,
     Curve decelerationCurve = Curves.decelerate,
-  })  : assert(text != null,
-          "The text cannot be null. If you don't want to display something, "
-          "consider passing an empty string instead."
-        ),
+  })  : assert(
+            text != null,
+            "The text cannot be null. If you don't want to display something, "
+            "consider passing an empty string instead."),
         assert(scrollAxis != null),
+        assert(crossAxisAlignment != null),
         assert(
-          blankSpace != null,
-          "The blankSpace cannot be null. If you don't want any blank space, "
-          "consider setting it to zero instead."),
+            blankSpace != null,
+            "The blankSpace cannot be null. If you don't want any blank space, "
+            "consider setting it to zero instead."),
         assert(!blankSpace.isNaN),
-        assert(blankSpace >= 0,
-          "The blankSpace needs to be positive or zero."
-        ),
+        assert(blankSpace >= 0, "The blankSpace needs to be positive or zero."),
         assert(blankSpace.isFinite),
         assert(velocity != null),
         assert(!velocity.isNaN),
         assert(velocity != 0.0, "The velocity cannot be zero."),
         assert(velocity.isFinite),
-        assert(pauseAfterRound != null,
-          "The pauseAfterRound cannot be null. If you don't want to pause, "
-          "consider setting it to Duration.zero instead."
-        ),
-        assert(pauseAfterRound >= Duration.zero,
-          "The pauseAfterRound cannot be negative as time travel isn't "
-          "invented yet."
-        ),
-        assert(startPadding != null,
-          "The start padding cannot be null. If you don't want any "
-          "startPadding, consider setting it to zero."
-        ),
+        assert(
+            pauseAfterRound != null,
+            "The pauseAfterRound cannot be null. If you don't want to pause, "
+            "consider setting it to Duration.zero instead."),
+        assert(
+            pauseAfterRound >= Duration.zero,
+            "The pauseAfterRound cannot be negative as time travel isn't "
+            "invented yet."),
+        assert(
+            startPadding != null,
+            "The start padding cannot be null. If you don't want any "
+            "startPadding, consider setting it to zero."),
         assert(accelerationDuration != null),
-        assert(accelerationDuration >= Duration.zero,
-          "The accelerationDuration cannot be negative as time travel isn't "
-          "invented yet."
-        ),
-        assert(accelerationCurve != null || accelerationDuration != Duration.zero,
-          "Even if the accelerationDuration is zero, you still need to "
-          "provide an accelerationCurve. Sorry about that."
-        ),
+        assert(
+            accelerationDuration >= Duration.zero,
+            "The accelerationDuration cannot be negative as time travel isn't "
+            "invented yet."),
+        assert(
+            accelerationCurve != null || accelerationDuration != Duration.zero,
+            "Even if the accelerationDuration is zero, you still need to "
+            "provide an accelerationCurve. Sorry about that."),
         assert(accelerationCurve != null),
         assert(decelerationDuration != null),
-        assert(decelerationDuration >= Duration.zero,
-          "The decelerationDuration must be positive or zero as time travel "
-          "isn't invented yet."
-        ),
-        assert(decelerationCurve != null || decelerationDuration != Duration.zero,
-          "Even if the decelerationDuration is zero, you still need to "
-          "provide an decelerationCurve. Sorry about that."
-        ),
+        assert(
+            decelerationDuration >= Duration.zero,
+            "The decelerationDuration must be positive or zero as time travel "
+            "isn't invented yet."),
+        assert(
+            decelerationCurve != null || decelerationDuration != Duration.zero,
+            "Even if the decelerationDuration is zero, you still need to "
+            "provide an decelerationCurve. Sorry about that."),
         assert(decelerationCurve != null),
         this.accelerationCurve = _IntegralCurve(accelerationCurve),
         this.decelerationCurve = _IntegralCurve(decelerationCurve),
         super(key: key);
 
   /// The text to be displayed.
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [style] to style the text.
   final String text;
 
   /// The style of the text to be displayed.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// This marquee has a bold text:
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   text: 'This is some bold text.',
   ///   style: TextStyle(weight: FontWeight.bold)
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [text] to provide the text itself.
   final TextStyle style;
 
-  /// The scrollAxis.
-  /// 
+  /// The scroll axis.
+  ///
   /// If set to [Axis.horizontal], the default scrolling direction is to the
   /// right.
   /// If set to [Axis.vertical], the default scrolling direction is to the
   /// bottom.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// This marquee scrolls vertically:
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   scrollAxis: Axis.vertical,
   ///   text: "Look what's below this:",
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * The sign of [velocity] to define the concrete scroll direction on this
   ///   axis.
   final Axis scrollAxis;
 
+  /// The alignment along the cross axis.
+  ///
+  /// # Sample code
+  ///
+  /// ```-dart
+  /// Marquee(
+  ///   crossAxisAlignment: CrossAxisAlignment.start,
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  /// * [scrollAxis] for setting the primary axis.
+  final CrossAxisAlignment crossAxisAlignment;
+
   /// The extend of blank space to display between instances of the text.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// In this example, there's 300 density pixels between the text instances:
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   blankSpace: 300.0,
@@ -225,42 +235,42 @@ class Marquee extends StatefulWidget {
   final double blankSpace;
 
   /// The scrolling velocity in pixels per second.
-  /// 
+  ///
   /// If a negative velocity is provided, the marquee scrolls in the reverse
   /// direction (to the right for horizontal marquees and to the top for
   /// vertical ones).
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// This marquee scrolls backwards with 1000 pixels per second:
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   velocity: -1000.0,
   ///   text: 'Gotta go fast in the reverse direction',
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [scrollAxis] to change the axis in which the scrolling takes place.
   final double velocity;
 
   /// After each round, a pause of this duration occurs.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// After every round, this marquee pauses for one second.
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   pauseAfterRound: Duration(seconds: 1),
   ///   text: 'Pausing for some time after every round.'
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [accelerationDuration] and [decelerationDuration] to make the
   ///   transitions between moving and paused state smooth.
   /// * [accelerationCurve] and [decelerationCurve] to have more control about
@@ -268,14 +278,14 @@ class Marquee extends StatefulWidget {
   final Duration pauseAfterRound;
 
   /// A padding for the resting position.
-  /// 
+  ///
   /// In between rounds, the marquee stops at this position. This parameter is
   /// especially useful if the marquee pauses after rounds and some other
   /// widgets are stacked on top of the marquee and block the sides, like
   /// fading gradients.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   startPadding: 20.0,
@@ -286,41 +296,41 @@ class Marquee extends StatefulWidget {
   final double startPadding;
 
   /// How long the acceleration takes.
-  /// 
+  ///
   /// At the start of each round, the scrolling speed gains momentum for this
   /// duration. This parameter is only useful if you embrace a pause after
   /// every round.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// A marquee that slowly accelerates in two seconds.
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   accelerationDuration: Duration(seconds: 2),
   ///   text: 'Gaining momentum in two seconds.'
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [accelerationCurve] to define a custom curve for accelerating.
   /// * [decelerationDuration], the equivalent for decelerating.
   final Duration accelerationDuration;
 
   /// The acceleration at the start of each round.
-  /// 
+  ///
   /// At the start of each round, the acceleration is defined by this curve
   /// where 0.0 stands for not moving and 1.0 for the target [velocity].
   /// Notice that it's useless to set the curve if you leave the
   /// [accelerationDuration] at the default of [Duration.zero].
   /// Also notice that you don't provide the scroll positions, but the actual
   /// velocity, so this curve gets integrated.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// A marquee that accelerates with a custom curve.
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   accelerationDuration: Duration(seconds: 1),
@@ -328,49 +338,49 @@ class Marquee extends StatefulWidget {
   ///   text: 'Accelerating with a custom curve.'
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [accelerationDuration] to change the duration of the acceleration.
   /// * [decelerationCurve], the equivalent for decelerating.
   final _IntegralCurve accelerationCurve;
 
   /// How long the deceleration takes.
-  /// 
+  ///
   /// At the end of each round, the scrolling speed gradually comes to a
   /// halt in this duration. This parameter is only useful if you embrace a
   /// pause after every round.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// A marquee that gradually comes to a halt in two seconds.
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   decelerationDuration: Duration(seconds: 2),
   ///   text: 'Gradually coming to a halt in two seconds.'
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [decelerationCurve] to define a custom curve for accelerating.
   /// * [accelerationDuration], the equivalent for decelerating.
   final Duration decelerationDuration;
 
   /// The deceleration at the end of each round.
-  /// 
+  ///
   /// At the end of each round, the deceleration is defined by this curve where
   /// 0.0 stands for not moving and 1.0 for the target [velocity].
   /// Notice that it's useless to set this curve if you leave the
   /// [accelerationDuration] at the default of [Duration.zero].
   /// Also notice that you don't provide the scroll position, but the actual
   /// velocity, so this curve gets integrated.
-  /// 
+  ///
   /// ## Sample code
-  /// 
+  ///
   /// A marquee that decelerates with a custom curve.
-  /// 
+  ///
   /// ```dart
   /// Marquee(
   ///   decelerationDuration: Duration(seconds: 1),
@@ -378,30 +388,29 @@ class Marquee extends StatefulWidget {
   ///   text: 'Decelerating with a custom curve.'
   /// )
   /// ```
-  /// 
+  ///
   /// See also:
-  /// 
+  ///
   /// * [decelerationDuration] to change the duration of the acceleration.
   /// * [accelerationCurve], the equivalent for decelerating.
   final _IntegralCurve decelerationCurve;
-
 
   @override
   State<StatefulWidget> createState() => _MarqueeState();
 
   bool equals(Object other) {
-    return other is Marquee
-      && text == other.text
-      && style == other.style
-      && scrollAxis == other.scrollAxis
-      && blankSpace == other.blankSpace
-      && velocity == other.velocity
-      && startPadding == other.startPadding
-      && pauseAfterRound == other.pauseAfterRound
-      && accelerationDuration == other.accelerationDuration
-      && accelerationCurve == other.accelerationCurve
-      && decelerationDuration == other.decelerationDuration
-      && decelerationCurve == other.decelerationCurve;
+    return other is Marquee &&
+        text == other.text &&
+        style == other.style &&
+        scrollAxis == other.scrollAxis &&
+        blankSpace == other.blankSpace &&
+        velocity == other.velocity &&
+        startPadding == other.startPadding &&
+        pauseAfterRound == other.pauseAfterRound &&
+        accelerationDuration == other.accelerationDuration &&
+        accelerationCurve == other.accelerationCurve &&
+        decelerationDuration == other.decelerationDuration &&
+        decelerationCurve == other.decelerationCurve;
   }
 }
 
@@ -414,7 +423,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   double _accelerationTarget; // After accelerating, before moving linearly.
   double _linearTarget; // After moving linearly, before decelerating.
   double _decelerationTarget; // After decelerating.
-  
+
   // The durations of various scrolling phases.
   Duration _totalDuration;
   Duration get _accelerationDuration => widget.accelerationDuration;
@@ -424,14 +433,12 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// A timer that is fired at the start of each round.
   bool _running = true;
 
-
   @override
   void initState() {
     super.initState();
     _initialize();
     Future.delayed(Duration.zero, () {
       Future.doWhile(_scroll);
-      //print('Scrolling finished.');
     });
   }
 
@@ -444,14 +451,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    //print('Did update widget called');
-    
-    // If any parameters of the widget changed, recalculate the values and
-    // start scrolling from the start, just as if the widget was created
-    // brand-new.
-    if (widget != oldWidget) {
-      _initialize();
-    }
+    // If any parameters of the widget changed, recalculate the values and start
+    // scrolling from the start, just as if the widget was created brand-new.
+    if (widget != oldWidget) _initialize();
   }
 
   @override
@@ -460,57 +462,49 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-
   // Calculates all necessary values for animating, then starts the animation.
   void _initialize() {
     //print('Initializing');
 
     // Calculate lengths (amount of pixels that each phase needs).
     final totalLength = _getTextWidth() + widget.blankSpace;
-    final accelerationLength = widget.accelerationCurve.integral * widget.velocity
-        * _accelerationDuration.inMilliseconds / 1000.0;
-    final decelerationLength = widget.decelerationCurve.integral * widget.velocity
-        * _decelerationDuration.inMilliseconds / 1000.0;
-    final linearLength = (totalLength - accelerationLength.abs() - decelerationLength.abs())
-        * (widget.velocity > 0 ? 1 : -1);
+    final accelerationLength = widget.accelerationCurve.integral *
+        widget.velocity *
+        _accelerationDuration.inMilliseconds /
+        1000.0;
+    final decelerationLength = widget.decelerationCurve.integral *
+        widget.velocity *
+        _decelerationDuration.inMilliseconds /
+        1000.0;
+    final linearLength =
+        (totalLength - accelerationLength.abs() - decelerationLength.abs()) *
+            (widget.velocity > 0 ? 1 : -1);
 
     // Calculate scroll positions at various scrolling phases.
     _startPosition = 2 * totalLength - widget.startPadding;
     _accelerationTarget = _startPosition + accelerationLength;
     _linearTarget = _accelerationTarget + linearLength;
     _decelerationTarget = _linearTarget + decelerationLength;
-    
+
     // Calculate durations for the phases.
-    _totalDuration = _accelerationDuration + _decelerationDuration
-        + Duration(milliseconds: (linearLength / widget.velocity * 1000).toInt());
-    _linearDuration = _totalDuration - _accelerationDuration - _decelerationDuration;
+    _totalDuration = _accelerationDuration +
+        _decelerationDuration +
+        Duration(milliseconds: (linearLength / widget.velocity * 1000).toInt());
+    _linearDuration =
+        _totalDuration - _accelerationDuration - _decelerationDuration;
 
-    assert(_totalDuration > Duration.zero,
-      "With the given values, the total duration for one round would be "
-      "negative. As time travel isn't invented yet, this shouldn't happen."
-    );
-    assert(_linearDuration >= Duration.zero,
-      "Acceleration and deceleration phase overlap. To fix this, try a "
-      "combination of these approaches:\n"
-      "* Make the text longer, so there's more room to animate within.\n"
-      "* Shorten the accelerationDuration or decelerationDuration.\n"
-      "* Decrease the velocity, so the duration to animate within is longer.\n"
-    );
-
-    /*//print('Total length: $totalLength');
-    //print('Start position: $_startPosition');
-    //print('Acceleration length: $accelerationLength');
-    //print('Acceleration target: $_accelerationTarget');
-    //print('Linear length: $linearLength');
-    //print('Linear target: $_linearTarget');
-    //print('Deceleration length: $decelerationLength');
-    //print('Deceleration target: $_decelerationTarget');
-    //print('Acceleration duration: $_accelerationDuration');
-    //print('Linear duration: $_linearDuration');
-    //print('Deceleration duration: $_decelerationDuration');
-    //print('Total duration: $_totalDuration');*/
+    assert(
+        _totalDuration > Duration.zero,
+        "With the given values, the total duration for one round would be "
+        "negative. As time travel isn't invented yet, this shouldn't happen.");
+    assert(
+        _linearDuration >= Duration.zero,
+        "Acceleration and deceleration phase overlap. To fix this, try a "
+        "combination of these approaches:\n"
+        "* Make the text longer, so there's more room to animate within.\n"
+        "* Shorten the accelerationDuration or decelerationDuration.\n"
+        "* Decrease the velocity, so the duration to animate within is longer.\n");
   }
-
 
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
@@ -520,7 +514,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     await _accelerate();
     if (!_running) return;
-    
+
     await _moveLinearly();
     if (!_running) return;
 
@@ -532,20 +526,11 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   // Methods that animate the controller.
   Future<void> _accelerate() async => await _animateTo(
-    _accelerationTarget,
-    _accelerationDuration,
-    widget.accelerationCurve
-  );
-  Future<void> _moveLinearly() async => await _animateTo(
-    _linearTarget,
-    _linearDuration,
-    Curves.linear
-  );
-  Future<void> _decelerate() async => await _animateTo(
-    _decelerationTarget,
-    _decelerationDuration,
-    widget.decelerationCurve.flipped
-  );
+      _accelerationTarget, _accelerationDuration, widget.accelerationCurve);
+  Future<void> _moveLinearly() async =>
+      await _animateTo(_linearTarget, _linearDuration, Curves.linear);
+  Future<void> _decelerate() async => await _animateTo(_decelerationTarget,
+      _decelerationDuration, widget.decelerationCurve.flipped);
 
   /// Helping method that either animates to the given target position or jumps
   /// right to it if the duration is Duration.zero.
@@ -571,17 +556,40 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     return tp.width;
   }
 
-
-  /// Builds the marquee.
   @override
   Widget build(BuildContext context) {
+    bool isHorizontal = widget.scrollAxis == Axis.horizontal;
+    Alignment alignment;
+
+    switch (widget.crossAxisAlignment) {
+      case CrossAxisAlignment.start:
+        alignment = isHorizontal ? Alignment.topCenter : Alignment.centerLeft;
+        break;
+      case CrossAxisAlignment.end:
+        alignment =
+            isHorizontal ? Alignment.bottomCenter : Alignment.centerRight;
+        break;
+      case CrossAxisAlignment.center:
+        alignment = Alignment.center;
+        break;
+      case CrossAxisAlignment.stretch:
+      case CrossAxisAlignment.baseline:
+        alignment = null;
+        break;
+    }
+
     return ListView.builder(
       controller: _controller,
       scrollDirection: widget.scrollAxis,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
-        return i.isEven ? Text(widget.text, style: widget.style) : _buildBlankSpace();
-      }
+        final text = i.isEven
+            ? Text(widget.text, style: widget.style)
+            : _buildBlankSpace();
+        return alignment == null
+            ? text
+            : Align(alignment: alignment, child: text);
+      },
     );
   }
 
