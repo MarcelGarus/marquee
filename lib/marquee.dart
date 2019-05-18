@@ -1,6 +1,7 @@
 library marquee;
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// A curve that represents the integral of another curve.
@@ -437,8 +438,11 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _initialize();
-    Future.delayed(Duration.zero, () {
-      Future.doWhile(_scroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_running) {
+        _running = true;
+        Future.doWhile(_scroll);
+      }
     });
   }
 
