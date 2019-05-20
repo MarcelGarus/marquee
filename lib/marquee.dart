@@ -432,7 +432,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Duration get _decelerationDuration => widget.decelerationDuration;
 
   /// A timer that is fired at the start of each round.
-  bool _running = true;
+  bool _running = false;
 
   @override
   void initState() {
