@@ -427,6 +427,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   // The durations of various scrolling phases.
   Duration _totalDuration;
+
   Duration get _accelerationDuration => widget.accelerationDuration;
   Duration _linearDuration; // The duration of linearly scrolling.
   Duration get _decelerationDuration => widget.decelerationDuration;
@@ -437,7 +438,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _initialize();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_running) {
         _running = true;
@@ -457,7 +458,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     // If any parameters of the widget changed, recalculate the values and start
     // scrolling from the start, just as if the widget was created brand-new.
-    if (widget != oldWidget) _initialize();
+    // if (widget != oldWidget) _initialize();
   }
 
   @override
@@ -467,11 +468,11 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   }
 
   // Calculates all necessary values for animating, then starts the animation.
-  void _initialize() {
+  void _initialize(BuildContext context) {
     //print('Initializing');
 
     // Calculate lengths (amount of pixels that each phase needs).
-    final totalLength = _getTextWidth() + widget.blankSpace;
+    final totalLength = _getTextWidth(context) + widget.blankSpace;
     final accelerationLength = widget.accelerationCurve.integral *
         widget.velocity *
         _accelerationDuration.inMilliseconds /
@@ -531,8 +532,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   // Methods that animate the controller.
   Future<void> _accelerate() async => await _animateTo(
       _accelerationTarget, _accelerationDuration, widget.accelerationCurve);
+
   Future<void> _moveLinearly() async =>
       await _animateTo(_linearTarget, _linearDuration, Curves.linear);
+
   Future<void> _decelerate() async => await _animateTo(_decelerationTarget,
       _decelerationDuration, widget.decelerationCurve.flipped);
 
@@ -547,21 +550,28 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   }
 
   /// Returns the width of the text.
-  double _getTextWidth() {
+  double _getTextWidth(BuildContext context) {
     final span = TextSpan(text: widget.text, style: widget.style);
-    final tp = TextPainter(
-      text: span,
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-      //locale: Localizations.localeOf(context),
+
+    final constraints = BoxConstraints(
+      maxWidth: double.infinity,
     );
 
-    tp.layout(maxWidth: double.infinity);
-    return tp.width;
+    final richTextWidget = Text.rich(span).build(context) as RichText;
+    final renderObject = richTextWidget.createRenderObject(context);
+    renderObject.layout(constraints);
+
+    final boxes = renderObject.getBoxesForSelection(TextSelection(
+        baseOffset: 0,
+        extentOffset: TextSpan(text: widget.text).toPlainText().length));
+
+    return boxes.last.right;
   }
 
   @override
   Widget build(BuildContext context) {
+    _initialize(context);
+
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
     Alignment alignment;
 
