@@ -611,6 +611,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     setState(() => _isOnPause = true);
     await Future.delayed(widget.pauseAfterRound);
     setState(() => _isOnPause = false);
+    await Future.delayed(widget.pauseAfterRound);
     _roundCounter++;
   }
 
