@@ -593,7 +593,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _initialize(context);
-    bool showFading = !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
     Alignment alignment;
 
@@ -613,28 +612,21 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         alignment = null;
         break;
     }
-    return FadingEdgeScrollView.fromScrollView(
-      gradientFractionOnStart:
-          !showFading ? 0.0 : widget.fadingEdgeGradientFractionOnStart,
-      gradientFractionOnEnd:
-          !showFading ? 0.0 : widget.fadingEdgeGradientFractionOnEnd,
-      shouldDisposeScrollController: false,
-      child: ListView.builder(
-        controller: _controller,
-        scrollDirection: widget.scrollAxis,
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (_, i) {
-          final text = i.isEven
-              ? Text(
-                  widget.text,
-                  style: widget.style,
-                )
-              : _buildBlankSpace();
-          return alignment == null
-              ? text
-              : Align(alignment: alignment, child: text);
-        },
-      ),
+    return ListView.builder(
+      controller: _controller,
+      scrollDirection: widget.scrollAxis,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (_, i) {
+        final text = i.isEven
+            ? Text(
+                widget.text,
+                style: widget.style,
+              )
+            : _buildBlankSpace();
+        return alignment == null
+            ? text
+            : Align(alignment: alignment, child: text);
+      },
     );
   }
 
