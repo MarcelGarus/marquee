@@ -1,3 +1,7 @@
+## [1.5.0] - 2020/06/04
+
+* Added feature faded edges
+
 ## [1.4.0] - 2020/06/04
 
 * Added support to stop the scroll after a number of rounds
