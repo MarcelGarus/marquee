@@ -131,14 +131,6 @@ class Marquee extends StatefulWidget {
             "The pauseAfterRound cannot be negative as time travel isn't "
             "invented yet."),
         assert(
-            fadingEdgeGradientFractionOnStart >= 0 &&
-                fadingEdgeGradientFractionOnStart <= 1,
-            "The gradientFractionOnStart value should be between 0 and 1 included"),
-        assert(
-            fadingEdgeGradientFractionOnEnd >= 0 &&
-                fadingEdgeGradientFractionOnEnd <= 1,
-            "The gradientFractionOnEnd value should be between 0 and 1 included"),
-        assert(
             startPadding != null,
             "The start padding cannot be null. If you don't want any "
             "startPadding, consider setting it to zero."),
@@ -302,57 +294,6 @@ class Marquee extends StatefulWidget {
   /// )
   /// ```
   final int numberOfRounds;
-
-  /// The fading edge styling will only appears
-  /// when the text is scolling.
-  /// Default value is set to true
-  ///
-  /// ## Sample code
-  ///
-  /// After every round, this marquee pauses for one second.
-  ///
-  /// ```dart
-  /// Marquee(
-  ///   showFadingOnlyWhenScrolling: false,
-  ///   text: 'Pausing for some time after every round.'
-  /// )
-  /// ```
-  final bool showFadingOnlyWhenScrolling;
-
-  /// Set this value between 0 and 1 to fade the left or top edge,
-  /// depending of the Axis used, of the marquee widget
-  /// The default value is 0.0 and also means that there
-  /// won't be any fading effect
-  ///
-  /// ## Sample code
-  ///
-  /// After every round, this marquee pauses for one second.
-  ///
-  /// ```dart
-  /// Marquee(
-  ///   fadingEdgeGradientFractionOnStart:0.1,
-  ///   text: 'Pausing for some time after every round.'
-  /// )
-  /// ```
-  final double fadingEdgeGradientFractionOnStart;
-
-  /// Set this value between 0 and 1 to fade the right or bottom edge,
-  /// depending on the Axis used
-  /// of the marquee widget
-  /// The default value is 0.0 and also means that there
-  /// won't be any fading effect
-  ///
-  /// ## Sample code
-  ///
-  /// After every round, this marquee pauses for one second.
-  ///
-  /// ```dart
-  /// Marquee(
-  ///   fadingEdgeGradientFractionOnEnd:0.1,
-  ///   text: 'Pausing for some time after every round.'
-  /// )
-  /// ```
-  final double fadingEdgeGradientFractionOnEnd;
 
   /// A padding for the resting position.
   ///
