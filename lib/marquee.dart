@@ -1,8 +1,8 @@
 library marquee;
 
+import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// A curve that represents the integral of another curve.
 ///
@@ -99,6 +99,9 @@ class Marquee extends StatefulWidget {
     this.blankSpace = 0.0,
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
+    this.showFadingOnlyWhenScrolling = true,
+    this.fadingEdgeStartFraction = 0.0,
+    this.fadingEdgeEndFraction = 0.0,
     this.numberOfRounds,
     this.startPadding = 0.0,
     this.accelerationDuration = Duration.zero,
@@ -130,6 +133,10 @@ class Marquee extends StatefulWidget {
             pauseAfterRound >= Duration.zero,
             "The pauseAfterRound cannot be negative as time travel isn't "
             "invented yet."),
+        assert(fadingEdgeStartFraction >= 0 && fadingEdgeStartFraction <= 1,
+            "The fadingEdgeGradientFractionOnStart value should be between 0 and 1, inclusive"),
+        assert(fadingEdgeEndFraction >= 0 && fadingEdgeEndFraction <= 1,
+            "The fadingEdgeGradientFractionOnEnd value should be between 0 and 1, inclusive"),
         assert(
             startPadding != null,
             "The start padding cannot be null. If you don't want any "
@@ -280,20 +287,71 @@ class Marquee extends StatefulWidget {
   ///   how the transition between moving and pausing state occur.
   final Duration pauseAfterRound;
 
-  /// When the text a rounded X times, it will stop scrolling
-  /// 0 is default value and is the value for the infinite loop
+  /// When the text scrolled around [numberOfRounds] times, it will stop scrolling
+  /// `null` indicates there is no limit
   ///
   /// ## Sample code
   ///
-  /// After every round, this marquee pauses for one second.
+  /// This marquee stops after 3 rounds
   ///
   /// ```dart
   /// Marquee(
   ///   numberOfRounds:3,
-  ///   text: 'Pausing for some time after every round.'
+  ///   text: 'Stopping after three rounds.'
   /// )
   /// ```
   final int numberOfRounds;
+
+  /// Whether the fading edge should only appear while the text is
+  /// scrolling.
+  ///
+  /// ## Sample code
+  ///
+  /// This marquee will only show the fade while scrolling.
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
+  /// )
+  /// ```
+  final bool showFadingOnlyWhenScrolling;
+
+  /// The fraction of the [Marquee] that will be faded on the left or top.
+  /// By default, there won't be any fading.
+  ///
+  /// ## Sample code
+  ///
+  /// This marquee fades the edges while scrolling
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
+  /// )
+  /// ```
+  final double fadingEdgeStartFraction;
+
+  /// The fraction of the [Marquee] that will be faded on the right or down.
+  /// By default, there won't be any fading.
+  ///
+  /// ## Sample code
+  ///
+  /// This marquee fades the edges while scrolling
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
+  /// )
+  /// ```
+  final double fadingEdgeEndFraction;
 
   /// A padding for the resting position.
   ///
@@ -452,10 +510,13 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   /// A timer that is fired at the start of each round.
   bool _running = false;
+  bool _isOnPause = false;
   int _roundCounter = 1;
   bool get isDone => widget.numberOfRounds == null
       ? false
       : _roundCounter > widget.numberOfRounds;
+  bool get showFading =>
+      !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
 
   @override
   void initState() {
@@ -547,6 +608,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     await _decelerate();
     if (!_running) return;
+    setState(() => _isOnPause = true);
+    await Future.delayed(widget.pauseAfterRound);
+    setState(() => _isOnPause = false);
     await Future.delayed(widget.pauseAfterRound);
     _roundCounter++;
   }
@@ -594,6 +658,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     _initialize(context);
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
+
     Alignment alignment;
 
     switch (widget.crossAxisAlignment) {
@@ -612,21 +677,27 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         alignment = null;
         break;
     }
-    return ListView.builder(
-      controller: _controller,
-      scrollDirection: widget.scrollAxis,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (_, i) {
-        final text = i.isEven
-            ? Text(
-                widget.text,
-                style: widget.style,
-              )
-            : _buildBlankSpace();
-        return alignment == null
-            ? text
-            : Align(alignment: alignment, child: text);
-      },
+    return FadingEdgeScrollView.fromScrollView(
+      gradientFractionOnStart:
+          !showFading ? 0.0 : widget.fadingEdgeStartFraction,
+      gradientFractionOnEnd: !showFading ? 0.0 : widget.fadingEdgeEndFraction,
+      shouldDisposeScrollController: false,
+      child: ListView.builder(
+        controller: _controller,
+        scrollDirection: widget.scrollAxis,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (_, i) {
+          final text = i.isEven
+              ? Text(
+                  widget.text,
+                  style: widget.style,
+                )
+              : _buildBlankSpace();
+          return alignment == null
+              ? text
+              : Align(alignment: alignment, child: text);
+        },
+      ),
     );
   }
 
