@@ -99,6 +99,7 @@ class Marquee extends StatefulWidget {
     this.blankSpace = 0.0,
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
+    this.stopAfterMaxRound = 0,
     this.startPadding = 0.0,
     this.accelerationDuration = Duration.zero,
     Curve accelerationCurve = Curves.decelerate,
@@ -278,6 +279,21 @@ class Marquee extends StatefulWidget {
   ///   how the transition between moving and pausing state occur.
   final Duration pauseAfterRound;
 
+  /// When the text a rounded X times, it will stop scrolling
+  /// 0 is default value and is the value for the infinite loop
+  ///
+  /// ## Sample code
+  ///
+  /// After every round, this marquee pauses for one second.
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   stopAfterMaxRound:3,
+  ///   text: 'Pausing for some time after every round.'
+  /// )
+  /// ```
+  final int stopAfterMaxRound;
+
   /// A padding for the resting position.
   ///
   /// In between rounds, the marquee stops at this position. This parameter is
@@ -408,6 +424,7 @@ class Marquee extends StatefulWidget {
         velocity == other.velocity &&
         startPadding == other.startPadding &&
         pauseAfterRound == other.pauseAfterRound &&
+        stopAfterMaxRound == other.stopAfterMaxRound &&
         accelerationDuration == other.accelerationDuration &&
         accelerationCurve == other.accelerationCurve &&
         decelerationDuration == other.decelerationDuration &&
@@ -434,6 +451,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   /// A timer that is fired at the start of each round.
   bool _running = false;
+  int _roundCounter = 0;
 
   @override
   void initState() {
@@ -514,6 +532,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
+    final canMakeRoundTrip = widget.stopAfterMaxRound == 0 ||
+        _roundCounter < widget.stopAfterMaxRound;
+    if (!canMakeRoundTrip) return;
     _controller.jumpTo(_startPosition);
     if (!_running) return;
 
@@ -527,6 +548,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     if (!_running) return;
 
     await Future.delayed(widget.pauseAfterRound);
+    _roundCounter++;
   }
 
   // Methods that animate the controller.
