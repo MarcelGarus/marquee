@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       blankSpace: 20.0,
       velocity: 100.0,
       pauseAfterRound: Duration(seconds: 1),
-      stopAfterMaxRound: 3,
+      numberOfRounds: 3,
       startPadding: 10.0,
       accelerationDuration: Duration(seconds: 1),
       accelerationCurve: Curves.linear,
