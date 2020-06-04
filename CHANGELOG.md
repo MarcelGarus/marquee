@@ -1,3 +1,7 @@
+## [1.4.0] - 2020/06/04
+
+* Added support to stop the scroll after a number of rounds
+
 ## [1.3.1] - 2019/09/25
 
 * Minor fixes.

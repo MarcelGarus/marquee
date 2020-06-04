@@ -99,6 +99,7 @@ class Marquee extends StatefulWidget {
     this.blankSpace = 0.0,
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
+    this.numberOfRounds,
     this.startPadding = 0.0,
     this.accelerationDuration = Duration.zero,
     Curve accelerationCurve = Curves.decelerate,
@@ -133,6 +134,7 @@ class Marquee extends StatefulWidget {
             startPadding != null,
             "The start padding cannot be null. If you don't want any "
             "startPadding, consider setting it to zero."),
+        assert(numberOfRounds == null || numberOfRounds > 0),
         assert(accelerationDuration != null),
         assert(
             accelerationDuration >= Duration.zero,
@@ -278,6 +280,21 @@ class Marquee extends StatefulWidget {
   ///   how the transition between moving and pausing state occur.
   final Duration pauseAfterRound;
 
+  /// When the text a rounded X times, it will stop scrolling
+  /// 0 is default value and is the value for the infinite loop
+  ///
+  /// ## Sample code
+  ///
+  /// After every round, this marquee pauses for one second.
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   numberOfRounds:3,
+  ///   text: 'Pausing for some time after every round.'
+  /// )
+  /// ```
+  final int numberOfRounds;
+
   /// A padding for the resting position.
   ///
   /// In between rounds, the marquee stops at this position. This parameter is
@@ -408,6 +425,7 @@ class Marquee extends StatefulWidget {
         velocity == other.velocity &&
         startPadding == other.startPadding &&
         pauseAfterRound == other.pauseAfterRound &&
+        numberOfRounds == other.numberOfRounds &&
         accelerationDuration == other.accelerationDuration &&
         accelerationCurve == other.accelerationCurve &&
         decelerationDuration == other.decelerationDuration &&
@@ -434,6 +452,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   /// A timer that is fired at the start of each round.
   bool _running = false;
+  int _roundCounter = 1;
+  bool get isDone => widget.numberOfRounds == null
+      ? false
+      : _roundCounter > widget.numberOfRounds;
 
   @override
   void initState() {
@@ -449,7 +471,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   Future<bool> _scroll() async {
     await _makeRoundTrip();
-    return _running;
+    return _running && !isDone;
   }
 
   @override
@@ -525,8 +547,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     await _decelerate();
     if (!_running) return;
-
     await Future.delayed(widget.pauseAfterRound);
+    _roundCounter++;
   }
 
   // Methods that animate the controller.
@@ -571,7 +593,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _initialize(context);
-
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
     Alignment alignment;
 
@@ -591,14 +612,16 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         alignment = null;
         break;
     }
-
     return ListView.builder(
       controller: _controller,
       scrollDirection: widget.scrollAxis,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
-            ? Text(widget.text, style: widget.style)
+            ? Text(
+                widget.text,
+                style: widget.style,
+              )
             : _buildBlankSpace();
         return alignment == null
             ? text
