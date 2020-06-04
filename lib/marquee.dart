@@ -601,10 +601,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
-    _running = false;
-    setState(() {
-      _isOnPause = true;
-    });
     _controller.jumpTo(_startPosition);
     if (!_running) return;
 
@@ -669,6 +665,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     _initialize(context);
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
+
     Alignment alignment;
 
     switch (widget.crossAxisAlignment) {
