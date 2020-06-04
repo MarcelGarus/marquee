@@ -100,8 +100,8 @@ class Marquee extends StatefulWidget {
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
     this.showFadingOnlyWhenScrolling = true,
-    this.fadingEdgeGradientFractionOnStart = 0.0,
-    this.fadingEdgeGradientFractionOnEnd = 0.0,
+    this.fadingEdgeStartFraction = 0.0,
+    this.fadingEdgeEndFraction = 0.0,
     this.numberOfRounds,
     this.startPadding = 0.0,
     this.accelerationDuration = Duration.zero,
@@ -133,14 +133,10 @@ class Marquee extends StatefulWidget {
             pauseAfterRound >= Duration.zero,
             "The pauseAfterRound cannot be negative as time travel isn't "
             "invented yet."),
-        assert(
-            fadingEdgeGradientFractionOnStart >= 0 &&
-                fadingEdgeGradientFractionOnStart <= 1,
-            "The gradientFractionOnStart value should be between 0 and 1 included"),
-        assert(
-            fadingEdgeGradientFractionOnEnd >= 0 &&
-                fadingEdgeGradientFractionOnEnd <= 1,
-            "The gradientFractionOnEnd value should be between 0 and 1 included"),
+        assert(fadingEdgeStartFraction >= 0 && fadingEdgeStartFraction <= 1,
+            "The fadingEdgeGradientFractionOnStart value should be between 0 and 1, inclusive"),
+        assert(fadingEdgeEndFraction >= 0 && fadingEdgeEndFraction <= 1,
+            "The fadingEdgeGradientFractionOnEnd value should be between 0 and 1, inclusive"),
         assert(
             startPadding != null,
             "The start padding cannot be null. If you don't want any "
@@ -291,71 +287,71 @@ class Marquee extends StatefulWidget {
   ///   how the transition between moving and pausing state occur.
   final Duration pauseAfterRound;
 
-  /// When the text a rounded X times, it will stop scrolling
-  /// 0 is default value and is the value for the infinite loop
+  /// When the text scrolled around [numberOfRounds] times, it will stop scrolling
+  /// `null` indicates there is no limit
   ///
   /// ## Sample code
   ///
-  /// After every round, this marquee pauses for one second.
+  /// This marquee stops after 3 rounds
   ///
   /// ```dart
   /// Marquee(
   ///   numberOfRounds:3,
-  ///   text: 'Pausing for some time after every round.'
+  ///   text: 'Stopping after three rounds.'
   /// )
   /// ```
   final int numberOfRounds;
 
-  /// The fading edge styling will only appears
-  /// when the text is scolling.
-  /// Default value is set to true
+  /// Whether the fading edge should only appear while the text is
+  /// scrolling.
   ///
   /// ## Sample code
   ///
-  /// After every round, this marquee pauses for one second.
+  /// This marquee will only show the fade while scrolling.
   ///
   /// ```dart
   /// Marquee(
-  ///   showFadingOnlyWhenScrolling: false,
-  ///   text: 'Pausing for some time after every round.'
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
   /// )
   /// ```
   final bool showFadingOnlyWhenScrolling;
 
-  /// Set this value between 0 and 1 to fade the left or top edge,
-  /// depending of the Axis used, of the marquee widget
-  /// The default value is 0.0 and also means that there
-  /// won't be any fading effect
+  /// The fraction of the [Marquee] that will be faded on the left or top.
+  /// By default, there won't be any fading.
   ///
   /// ## Sample code
   ///
-  /// After every round, this marquee pauses for one second.
+  /// This marquee fades the edges while scrolling
   ///
   /// ```dart
   /// Marquee(
-  ///   fadingEdgeGradientFractionOnStart:0.1,
-  ///   text: 'Pausing for some time after every round.'
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
   /// )
   /// ```
-  final double fadingEdgeGradientFractionOnStart;
+  final double fadingEdgeStartFraction;
 
-  /// Set this value between 0 and 1 to fade the right or bottom edge,
-  /// depending on the Axis used
-  /// of the marquee widget
-  /// The default value is 0.0 and also means that there
-  /// won't be any fading effect
+  /// The fraction of the [Marquee] that will be faded on the right or down.
+  /// By default, there won't be any fading.
   ///
   /// ## Sample code
   ///
-  /// After every round, this marquee pauses for one second.
+  /// This marquee fades the edges while scrolling
   ///
   /// ```dart
   /// Marquee(
-  ///   fadingEdgeGradientFractionOnEnd:0.1,
-  ///   text: 'Pausing for some time after every round.'
+  ///   showFadingOnlyWhenScrolling: true,
+  ///   fadingEdgeStartFraction: 0.1,
+  ///   fadingEdgeEndFraction: 0.1,
+  ///   text: 'Example text.',
   /// )
   /// ```
-  final double fadingEdgeGradientFractionOnEnd;
+  final double fadingEdgeEndFraction;
 
   /// A padding for the resting position.
   ///
@@ -612,13 +608,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     await _decelerate();
     if (!_running) return;
-    setState(() {
-      _isOnPause = true;
-    });
+    setState(() => _isOnPause = true);
     await Future.delayed(widget.pauseAfterRound);
-    setState(() {
-      _isOnPause = false;
-    });
+    setState(() => _isOnPause = false);
     _roundCounter++;
   }
 
@@ -686,9 +678,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     }
     return FadingEdgeScrollView.fromScrollView(
       gradientFractionOnStart:
-          !showFading ? 0.0 : widget.fadingEdgeGradientFractionOnStart,
-      gradientFractionOnEnd:
-          !showFading ? 0.0 : widget.fadingEdgeGradientFractionOnEnd,
+          !showFading ? 0.0 : widget.fadingEdgeStartFraction,
+      gradientFractionOnEnd: !showFading ? 0.0 : widget.fadingEdgeEndFraction,
       shouldDisposeScrollController: false,
       child: ListView.builder(
         controller: _controller,
