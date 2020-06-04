@@ -99,10 +99,10 @@ class Marquee extends StatefulWidget {
     this.blankSpace = 0.0,
     this.velocity = 50.0,
     this.pauseAfterRound = Duration.zero,
-    this.stopAfterMaxRound = 0,
     this.showFadingOnlyWhenScrolling = true,
     this.fadingEdgeGradientFractionOnStart = 0.0,
     this.fadingEdgeGradientFractionOnEnd = 0.0,
+    this.numberOfRounds,
     this.startPadding = 0.0,
     this.accelerationDuration = Duration.zero,
     Curve accelerationCurve = Curves.decelerate,
@@ -145,6 +145,7 @@ class Marquee extends StatefulWidget {
             startPadding != null,
             "The start padding cannot be null. If you don't want any "
             "startPadding, consider setting it to zero."),
+        assert(numberOfRounds == null || numberOfRounds > 0),
         assert(accelerationDuration != null),
         assert(
             accelerationDuration >= Duration.zero,
@@ -299,11 +300,11 @@ class Marquee extends StatefulWidget {
   ///
   /// ```dart
   /// Marquee(
-  ///   stopAfterMaxRound:3,
+  ///   numberOfRounds:3,
   ///   text: 'Pausing for some time after every round.'
   /// )
   /// ```
-  final int stopAfterMaxRound;
+  final int numberOfRounds;
 
   /// The fading edge styling will only appears
   /// when the text is scolling.
@@ -486,7 +487,7 @@ class Marquee extends StatefulWidget {
         velocity == other.velocity &&
         startPadding == other.startPadding &&
         pauseAfterRound == other.pauseAfterRound &&
-        stopAfterMaxRound == other.stopAfterMaxRound &&
+        numberOfRounds == other.numberOfRounds &&
         accelerationDuration == other.accelerationDuration &&
         accelerationCurve == other.accelerationCurve &&
         decelerationDuration == other.decelerationDuration &&
@@ -514,7 +515,12 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// A timer that is fired at the start of each round.
   bool _running = false;
   bool _isOnPause = false;
-  int _roundCounter = 0;
+  int _roundCounter = 1;
+  bool get isDone => widget.numberOfRounds == null
+      ? false
+      : _roundCounter > widget.numberOfRounds;
+  bool get showFading =>
+      !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
 
   @override
   void initState() {
@@ -530,7 +536,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   Future<bool> _scroll() async {
     await _makeRoundTrip();
-    return _running;
+    return _running && !isDone;
   }
 
   @override
@@ -595,15 +601,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
-    final canMakeRoundTrip = widget.stopAfterMaxRound == 0 ||
-        _roundCounter < widget.stopAfterMaxRound;
-    if (!canMakeRoundTrip) {
-      _running = false;
-      setState(() {
-        _isOnPause = true;
-      });
-      return;
-    }
+    _running = false;
+    setState(() {
+      _isOnPause = true;
+    });
     _controller.jumpTo(_startPosition);
     if (!_running) return;
 
@@ -667,7 +668,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _initialize(context);
-    bool showFading = !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
     bool isHorizontal = widget.scrollAxis == Axis.horizontal;
     Alignment alignment;
 
