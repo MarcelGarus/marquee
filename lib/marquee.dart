@@ -1,8 +1,8 @@
 library marquee;
 
-import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 /// A curve that represents the integral of another curve.
 ///

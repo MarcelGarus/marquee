@@ -12,7 +12,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fading_edge_scrollview: ^1.1.1
 
 dev_dependencies:
   flutter_test:
