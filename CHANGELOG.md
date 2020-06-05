@@ -1,3 +1,7 @@
+## [1.5.1] - 2020/06/04
+
+* Minro fixes.
+
 ## [1.5.0] - 2020/06/04
 
 * Added feature faded edges
