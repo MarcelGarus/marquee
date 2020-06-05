@@ -511,10 +511,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// A timer that is fired at the start of each round.
   bool _running = false;
   bool _isOnPause = false;
-  int _roundCounter = 1;
+  int _roundCounter = 0;
   bool get isDone => widget.numberOfRounds == null
       ? false
-      : _roundCounter > widget.numberOfRounds;
+      : widget.numberOfRounds == _roundCounter;
   bool get showFading =>
       !widget.showFadingOnlyWhenScrolling ? true : !_isOnPause;
 
@@ -607,12 +607,16 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     if (!_running) return;
 
     await _decelerate();
-    if (!_running) return;
-    setState(() => _isOnPause = true);
-    await Future.delayed(widget.pauseAfterRound);
-    setState(() => _isOnPause = false);
-    await Future.delayed(widget.pauseAfterRound);
+
     _roundCounter++;
+
+    if (!_running || !mounted) return;
+    setState(() => _isOnPause = true);
+
+    await Future.delayed(widget.pauseAfterRound);
+
+    if (!mounted || isDone) return;
+    setState(() => _isOnPause = false);
   }
 
   // Methods that animate the controller.
