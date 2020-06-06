@@ -611,12 +611,15 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     _roundCounter++;
 
     if (!_running || !mounted) return;
-    setState(() => _isOnPause = true);
 
-    await Future.delayed(widget.pauseAfterRound);
+    if (widget.pauseAfterRound > Duration.zero) {
+      setState(() => _isOnPause = true);
 
-    if (!mounted || isDone) return;
-    setState(() => _isOnPause = false);
+      await Future.delayed(widget.pauseAfterRound);
+
+      if (!mounted || isDone) return;
+      setState(() => _isOnPause = false);
+    }
   }
 
   // Methods that animate the controller.
@@ -643,17 +646,16 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   double _getTextWidth(BuildContext context) {
     final span = TextSpan(text: widget.text, style: widget.style);
 
-    final constraints = BoxConstraints(
-      maxWidth: double.infinity,
-    );
+    final constraints = BoxConstraints(maxWidth: double.infinity);
 
     final richTextWidget = Text.rich(span).build(context) as RichText;
     final renderObject = richTextWidget.createRenderObject(context);
     renderObject.layout(constraints);
 
     final boxes = renderObject.getBoxesForSelection(TextSelection(
-        baseOffset: 0,
-        extentOffset: TextSpan(text: widget.text).toPlainText().length));
+      baseOffset: 0,
+      extentOffset: TextSpan(text: widget.text).toPlainText().length,
+    ));
 
     return boxes.last.right;
   }
@@ -692,10 +694,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (_, i) {
           final text = i.isEven
-              ? Text(
-                  widget.text,
-                  style: widget.style,
-                )
+              ? Text(widget.text, style: widget.style)
               : _buildBlankSpace();
           return alignment == null
               ? text
