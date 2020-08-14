@@ -1,8 +1,10 @@
 library marquee;
 
-import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 
 /// A curve that represents the integral of another curve.
 ///
@@ -683,25 +685,26 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         alignment = null;
         break;
     }
-    return FadingEdgeScrollView.fromScrollView(
-      gradientFractionOnStart:
-          !showFading ? 0.0 : widget.fadingEdgeStartFraction,
-      gradientFractionOnEnd: !showFading ? 0.0 : widget.fadingEdgeEndFraction,
-      shouldDisposeScrollController: false,
-      child: ListView.builder(
-        controller: _controller,
-        scrollDirection: widget.scrollAxis,
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (_, i) {
-          final text = i.isEven
-              ? Text(widget.text, style: widget.style)
-              : _buildBlankSpace();
-          return alignment == null
-              ? text
-              : Align(alignment: alignment, child: text);
-        },
-      ),
+
+    Widget marquee = ListView.builder(
+      controller: _controller,
+      scrollDirection: widget.scrollAxis,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (_, i) {
+        final text = i.isEven
+            ? Text(widget.text, style: widget.style)
+            : _buildBlankSpace();
+        return alignment == null
+            ? text
+            : Align(alignment: alignment, child: text);
+      },
     );
+
+    if (kIsWeb) {
+      return marquee;
+    } else {
+      return _wrapWithFadingEdgeScrollView(marquee);
+    }
   }
 
   /// Builds the blank space between children.
@@ -709,6 +712,15 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     return SizedBox(
       width: widget.scrollAxis == Axis.horizontal ? widget.blankSpace : null,
       height: widget.scrollAxis == Axis.vertical ? widget.blankSpace : null,
+    );
+  }
+
+  Widget _wrapWithFadingEdgeScrollView(Widget child) {
+    return FadingEdgeScrollView.fromScrollView(
+      gradientFractionOnStart:
+      !showFading ? 0.0 : widget.fadingEdgeStartFraction,
+      gradientFractionOnEnd: !showFading ? 0.0 : widget.fadingEdgeEndFraction,
+      child: child,
     );
   }
 }
