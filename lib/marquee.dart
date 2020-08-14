@@ -700,11 +700,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       },
     );
 
-    if (kIsWeb) {
-      return marquee;
-    } else {
-      return _wrapWithFadingEdgeScrollView(marquee);
-    }
+    return kIsWeb ? marquee : _wrapWithFadingEdgeScrollView(marquee);
   }
 
   /// Builds the blank space between children.
