@@ -1,3 +1,7 @@
+## [1.5.3] - 2020-08-22
+
+* Remove fading on web.
+
 ## [1.5.2] - 2020-06-04
 
 * Fix the fading flashing even if there is no pause.
