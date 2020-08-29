@@ -276,8 +276,8 @@ class Marquee extends StatefulWidget {
   ///
   /// ```dart
   /// Marquee(
-  ///   pauseAfterRound: Duration(seconds: 1),
-  ///   text: 'Pausing for some time after every round.'
+  ///   pauseAfterRound: const Duration(seconds: 1),
+  ///   text: 'Pausing for some time after every round.',
   /// )
   /// ```
   ///
