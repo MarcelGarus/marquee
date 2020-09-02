@@ -1,3 +1,7 @@
+## [1.6.0] - 2020-09-02
+
+* Add startAfter argument to start scrolling after a duration.
+
 ## [1.5.3] - 2020-08-22
 
 * Remove fading on web.
