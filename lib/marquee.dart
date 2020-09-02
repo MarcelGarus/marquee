@@ -100,6 +100,7 @@ class Marquee extends StatefulWidget {
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.blankSpace = 0.0,
     this.velocity = 50.0,
+    this.startAfter = Duration.zero,
     this.pauseAfterRound = Duration.zero,
     this.showFadingOnlyWhenScrolling = true,
     this.fadingEdgeStartFraction = 0.0,
@@ -127,6 +128,10 @@ class Marquee extends StatefulWidget {
         assert(!velocity.isNaN),
         assert(velocity != 0.0, "The velocity cannot be zero."),
         assert(velocity.isFinite),
+        assert(
+            startAfter != null,
+            "The startAfter cannot be null. If you want to start immediately, "
+            "consider setting it to Duration.zero instead."),
         assert(
             pauseAfterRound != null,
             "The pauseAfterRound cannot be null. If you don't want to pause, "
@@ -267,6 +272,20 @@ class Marquee extends StatefulWidget {
   ///
   /// * [scrollAxis] to change the axis in which the scrolling takes place.
   final double velocity;
+
+  /// Start scrolling after this duration after the widget is first displayed.
+  ///
+  /// ## Sample code
+  ///
+  /// This [Marquee] starts scrolling one second after being displayed.
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   startAfter: const Duration(seconds: 1),
+  ///   text: 'Starts one second after being displayed.',
+  /// )
+  /// ```
+  final Duration startAfter;
 
   /// After each round, a pause of this duration occurs.
   ///
@@ -524,8 +543,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!_running) {
+        await Future<void>.delayed(widget.startAfter);
         _running = true;
         Future.doWhile(_scroll);
       }
