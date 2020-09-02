@@ -277,7 +277,7 @@ class Marquee extends StatefulWidget {
   ///
   /// ## Sample code
   ///
-  /// This Marqee starts scrolling one second after being displayed.
+  /// This [Marquee] starts scrolling one second after being displayed.
   ///
   /// ```dart
   /// Marquee(
