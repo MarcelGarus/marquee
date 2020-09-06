@@ -545,8 +545,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!_running) {
-        await Future<void>.delayed(widget.startAfter);
         _running = true;
+        await Future<void>.delayed(widget.startAfter);
         Future.doWhile(_scroll);
       }
     });
@@ -619,7 +619,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
-    _controller.jumpTo(_startPosition);
+    if (_controller.hasClients) {
+      _controller.jumpTo(_startPosition);
+    }
     if (!_running) return;
 
     await _accelerate();
@@ -660,7 +662,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     if (duration > Duration.zero) {
       await _controller.animateTo(target, duration: duration, curve: curve);
     } else {
-      _controller.jumpTo(target);
+      if (_controller.hasClients) {
+        _controller.jumpTo(target);
+      }
     }
   }
 
