@@ -554,7 +554,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   Future<bool> _scroll() async {
     await _makeRoundTrip();
-    return _running && !isDone;
+    return _running && !isDone && _controller.hasClients;
   }
 
   @override
@@ -619,9 +619,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Causes the controller to scroll one round.
   Future<void> _makeRoundTrip() async {
     // Reset the controller, then accelerate, move linearly and decelerate.
-    if (_controller.hasClients) {
-      _controller.jumpTo(_startPosition);
-    }
+    if (!_controller.hasClients) return;
+    _controller.jumpTo(_startPosition);
     if (!_running) return;
 
     await _accelerate();
@@ -659,12 +658,11 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   /// Helping method that either animates to the given target position or jumps
   /// right to it if the duration is Duration.zero.
   Future<void> _animateTo(double target, Duration duration, Curve curve) async {
+    if (!_controller.hasClients) return;
     if (duration > Duration.zero) {
       await _controller.animateTo(target, duration: duration, curve: curve);
     } else {
-      if (_controller.hasClients) {
-        _controller.jumpTo(target);
-      }
+      _controller.jumpTo(target);
     }
   }
 
@@ -738,7 +736,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Widget _wrapWithFadingEdgeScrollView(Widget child) {
     return FadingEdgeScrollView.fromScrollView(
       gradientFractionOnStart:
-      !showFading ? 0.0 : widget.fadingEdgeStartFraction,
+          !showFading ? 0.0 : widget.fadingEdgeStartFraction,
       gradientFractionOnEnd: !showFading ? 0.0 : widget.fadingEdgeEndFraction,
       child: child,
     );
