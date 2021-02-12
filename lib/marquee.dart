@@ -96,6 +96,7 @@ class Marquee extends StatefulWidget {
     Key key,
     @required this.text,
     this.style,
+    this.textScaleFactor,
     this.scrollAxis = Axis.horizontal,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.blankSpace = 0.0,
@@ -197,6 +198,24 @@ class Marquee extends StatefulWidget {
   ///
   /// * [text] to provide the text itself.
   final TextStyle style;
+
+  /// The font scale of the text to be displayed.
+  ///
+  /// ## Sample code
+  ///
+  /// This marquee has a fixed text scale factor, indipendent to the user selected resolution:
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   text: 'This is some bold text.',
+  ///   textScaleFactor: 1
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  /// * [text] to provide the text itself.
+  final double textScaleFactor;
 
   /// The scroll axis.
   ///
@@ -499,6 +518,7 @@ class Marquee extends StatefulWidget {
     return other is Marquee &&
         text == other.text &&
         style == other.style &&
+        textScaleFactor == other.textScaleFactor &&
         scrollAxis == other.scrollAxis &&
         blankSpace == other.blankSpace &&
         velocity == other.velocity &&
@@ -714,7 +734,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
-            ? Text(widget.text, style: widget.style)
+            ? Text(widget.text,
+                style: widget.style, textScaleFactor: widget.textScaleFactor)
             : _buildBlankSpace();
         return alignment == null
             ? text
