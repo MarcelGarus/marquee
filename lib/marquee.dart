@@ -198,7 +198,7 @@ class Marquee extends StatefulWidget {
   ///
   /// * [text] to provide the text itself.
   final TextStyle style;
-  
+
   /// The font scale of the text to be displayed.
   ///
   /// ## Sample code
@@ -215,7 +215,7 @@ class Marquee extends StatefulWidget {
   /// See also:
   ///
   /// * [text] to provide the text itself.
-  final int textScaleFactor;
+  final double textScaleFactor;
 
   /// The scroll axis.
   ///
@@ -688,7 +688,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   /// Returns the width of the text.
   double _getTextWidth(BuildContext context) {
-    final span = TextSpan(text: widget.text, style: widget.style, textScaleFactor: widget.textScaleFactor);
+    final span = TextSpan(text: widget.text, style: widget.style);
 
     final constraints = BoxConstraints(maxWidth: double.infinity);
 
@@ -734,7 +734,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
-            ? Text(widget.text, style: widget.style, textScaleFactor: widget.textScaleFactor)
+            ? Text(widget.text,
+                style: widget.style, textScaleFactor: widget.textScaleFactor)
             : _buildBlankSpace();
         return alignment == null
             ? text
