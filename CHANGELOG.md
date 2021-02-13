@@ -1,3 +1,8 @@
+## [1.7.0] - 2020-09-10
+
+* Add `textScaleFactor` parameter.
+* Thanks to @Sprechen
+
 ## [1.6.1] - 2020-09-10
 
 * Fixed bug of detached `ScrollController` after `startAfter` duration.
@@ -6,13 +11,13 @@
 
 ## [1.6.0] - 2020-09-02
 
-* Added startAfter argument to start scrolling after a duration.
+* Added `startAfter` argument to start scrolling after a duration.
 * Make documentation better.
 * Thanks to @hacker1024
 
 ## [1.5.3] - 2020-08-22
 
-* Removed fading on web.
+* Removed fading on the web.
 * Thanks to @HardVeur
 
 ## [1.5.2] - 2020-06-04
@@ -41,7 +46,7 @@
 
 ## [1.2.0] - 2019-04-29
 
-* Added support for cross axis alignment.
+* Added support for cross-axis alignment.
 
 ## [1.0.0] - 2018-10-29
 
@@ -56,7 +61,7 @@
   resulting in a more consistent experience when resuming from a paused app
   state.
 * Start padding added.
-* API documentation greatly improved. Many examples added.
+* API documentation greatly improved. Added many examples.
 * README is more concise.
 
 ## [0.1.0] - 2018-10-22
@@ -70,4 +75,4 @@
 
 ## [0.0.1] - 2018-10-22
 
-* Initial release featuring custom scrollAxis, blankSpace and velocity.
+* Initial release featuring custom `scrollAxis`, `blankSpace`, and `velocity`.
