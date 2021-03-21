@@ -131,17 +131,9 @@ class Marquee extends StatefulWidget {
             "The accelerationDuration cannot be negative as time travel isn't "
             "invented yet."),
         assert(
-            accelerationDuration != Duration.zero,
-            "Even if the accelerationDuration is zero, you still need to "
-            "provide an accelerationCurve. Sorry about that."),
-        assert(
             decelerationDuration >= Duration.zero,
             "The decelerationDuration must be positive or zero as time travel "
             "isn't invented yet."),
-        assert(
-            decelerationDuration != Duration.zero,
-            "Even if the decelerationDuration is zero, you still need to "
-            "provide an decelerationCurve. Sorry about that."),
         this.accelerationCurve = _IntegralCurve(accelerationCurve),
         this.decelerationCurve = _IntegralCurve(decelerationCurve),
         super(key: key);
