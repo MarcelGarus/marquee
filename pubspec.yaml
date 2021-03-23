@@ -7,12 +7,12 @@ homepage: https://github.com/marcelgarus/marquee
 issue_tracker: https://github.com/marcelgarus/marquee/issues
 
 environment:
-  sdk: ">=2.0.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  fading_edge_scrollview: ^1.1.4
+  fading_edge_scrollview: ^2.0.0
 
 dev_dependencies:
   flutter_test:
