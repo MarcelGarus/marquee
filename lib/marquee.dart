@@ -48,9 +48,7 @@ class _IntegralCurve extends Curve {
   /// curve.
   double transform(double t) {
     if (t < 0) return 0.0;
-
     for (final key in _values.keys) if (key > t) return _values[key]!;
-
     return 1.0;
   }
 }
@@ -119,21 +117,31 @@ class Marquee extends StatefulWidget {
         assert(velocity != 0.0, "The velocity cannot be zero."),
         assert(velocity.isFinite),
         assert(
-            pauseAfterRound >= Duration.zero,
-            "The pauseAfterRound cannot be negative as time travel isn't "
-            "invented yet."),
-        assert(fadingEdgeStartFraction >= 0 && fadingEdgeStartFraction <= 1,
-            "The fadingEdgeGradientFractionOnStart value should be between 0 and 1, inclusive"),
-        assert(fadingEdgeEndFraction >= 0 && fadingEdgeEndFraction <= 1,
-            "The fadingEdgeGradientFractionOnEnd value should be between 0 and 1, inclusive"),
-        assert(numberOfRounds == null || numberOfRounds > 0),        assert(
-            accelerationDuration >= Duration.zero,
-            "The accelerationDuration cannot be negative as time travel isn't "
-            "invented yet."),
+          pauseAfterRound >= Duration.zero,
+          "The pauseAfterRound cannot be negative as time travel isn't "
+          "invented yet.",
+        ),
         assert(
-            decelerationDuration >= Duration.zero,
-            "The decelerationDuration must be positive or zero as time travel "
-            "isn't invented yet."),
+          fadingEdgeStartFraction >= 0 && fadingEdgeStartFraction <= 1,
+          "The fadingEdgeGradientFractionOnStart value should be between 0 and "
+          "1, inclusive",
+        ),
+        assert(
+          fadingEdgeEndFraction >= 0 && fadingEdgeEndFraction <= 1,
+          "The fadingEdgeGradientFractionOnEnd value should be between 0 and "
+          "1, inclusive",
+        ),
+        assert(numberOfRounds == null || numberOfRounds > 0),
+        assert(
+          accelerationDuration >= Duration.zero,
+          "The accelerationDuration cannot be negative as time travel isn't "
+          "invented yet.",
+        ),
+        assert(
+          decelerationDuration >= Duration.zero,
+          "The decelerationDuration must be positive or zero as time travel "
+          "isn't invented yet.",
+        ),
         this.accelerationCurve = _IntegralCurve(accelerationCurve),
         this.decelerationCurve = _IntegralCurve(decelerationCurve),
         super(key: key);
@@ -477,23 +485,6 @@ class Marquee extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _MarqueeState();
-
-  bool equals(Object other) {
-    return other is Marquee &&
-        text == other.text &&
-        style == other.style &&
-        textScaleFactor == other.textScaleFactor &&
-        scrollAxis == other.scrollAxis &&
-        blankSpace == other.blankSpace &&
-        velocity == other.velocity &&
-        startPadding == other.startPadding &&
-        pauseAfterRound == other.pauseAfterRound &&
-        numberOfRounds == other.numberOfRounds &&
-        accelerationDuration == other.accelerationDuration &&
-        accelerationCurve == other.accelerationCurve &&
-        decelerationDuration == other.decelerationDuration &&
-        decelerationCurve == other.decelerationCurve;
-  }
 }
 
 class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
@@ -502,9 +493,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   // The scroll positions at various scrolling phases.
   late double _startPosition; // At the start, before accelerating.
-  double? _accelerationTarget; // After accelerating, before moving linearly.
-  double? _linearTarget; // After moving linearly, before decelerating.
-  double? _decelerationTarget; // After decelerating.
+  late double
+      _accelerationTarget; // After accelerating, before moving linearly.
+  late double _linearTarget; // After moving linearly, before decelerating.
+  late double _decelerationTarget; // After decelerating.
 
   // The durations of various scrolling phases.
   late Duration _totalDuration;
@@ -526,7 +518,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (!_running) {
         _running = true;
@@ -544,10 +535,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void didUpdateWidget(Widget oldWidget) {
     super.didUpdateWidget(oldWidget as Marquee);
-
-    // If any parameters of the widget changed, recalculate the values and start
-    // scrolling from the start, just as if the widget was created brand-new.
-    // if (widget != oldWidget) _initialize();
   }
 
   @override
@@ -556,10 +543,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  // Calculates all necessary values for animating, then starts the animation.
+  /// Calculates all necessary values for animating, then starts the animation.
   void _initialize(BuildContext context) {
-    //print('Initializing');
-
     // Calculate lengths (amount of pixels that each phase needs).
     final totalLength = _getTextWidth(context) + widget.blankSpace;
     final accelerationLength = widget.accelerationCurve.integral *
@@ -577,8 +562,8 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     // Calculate scroll positions at various scrolling phases.
     _startPosition = 2 * totalLength - widget.startPadding;
     _accelerationTarget = _startPosition + accelerationLength;
-    _linearTarget = _accelerationTarget! + linearLength;
-    _decelerationTarget = _linearTarget! + decelerationLength;
+    _linearTarget = _accelerationTarget + linearLength;
+    _decelerationTarget = _linearTarget + decelerationLength;
 
     // Calculate durations for the phases.
     _totalDuration = _accelerationDuration +
@@ -588,16 +573,18 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         _totalDuration - _accelerationDuration - _decelerationDuration;
 
     assert(
-        _totalDuration > Duration.zero,
-        "With the given values, the total duration for one round would be "
-        "negative. As time travel isn't invented yet, this shouldn't happen.");
+      _totalDuration > Duration.zero,
+      "With the given values, the total duration for one round would be "
+      "negative. As time travel isn't invented yet, this shouldn't happen.",
+    );
     assert(
-        _linearDuration! >= Duration.zero,
-        "Acceleration and deceleration phase overlap. To fix this, try a "
-        "combination of these approaches:\n"
-        "* Make the text longer, so there's more room to animate within.\n"
-        "* Shorten the accelerationDuration or decelerationDuration.\n"
-        "* Decrease the velocity, so the duration to animate within is longer.\n");
+      _linearDuration! >= Duration.zero,
+      "Acceleration and deceleration phase overlap. To fix this, try a "
+      "combination of these approaches:\n"
+      "* Make the text longer, so there's more room to animate within.\n"
+      "* Shorten the accelerationDuration or decelerationDuration.\n"
+      "* Decrease the velocity, so the duration to animate within is longer.\n",
+    );
   }
 
   /// Causes the controller to scroll one round.
@@ -630,18 +617,33 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   }
 
   // Methods that animate the controller.
-  Future<void> _accelerate() async => await _animateTo(
-      _accelerationTarget, _accelerationDuration, widget.accelerationCurve);
+  Future<void> _accelerate() async {
+    await _animateTo(
+      _accelerationTarget,
+      _accelerationDuration,
+      widget.accelerationCurve,
+    );
+  }
 
-  Future<void> _moveLinearly() async =>
-      await _animateTo(_linearTarget, _linearDuration, Curves.linear);
+  Future<void> _moveLinearly() async {
+    await _animateTo(_linearTarget, _linearDuration, Curves.linear);
+  }
 
-  Future<void> _decelerate() async => await _animateTo(_decelerationTarget,
-      _decelerationDuration, widget.decelerationCurve.flipped);
+  Future<void> _decelerate() async {
+    await _animateTo(
+      _decelerationTarget,
+      _decelerationDuration,
+      widget.decelerationCurve.flipped,
+    );
+  }
 
   /// Helping method that either animates to the given target position or jumps
   /// right to it if the duration is Duration.zero.
-  Future<void> _animateTo(double? target, Duration? duration, Curve curve) async {
+  Future<void> _animateTo(
+    double? target,
+    Duration? duration,
+    Curve curve,
+  ) async {
     if (!_controller.hasClients) return;
     if (duration! > Duration.zero) {
       await _controller.animateTo(target!, duration: duration, curve: curve);
