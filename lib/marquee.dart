@@ -521,6 +521,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       if (!_running) {
         _running = true;
+        _controller.jumpTo(_startPosition);
         await Future<void>.delayed(widget.startAfter);
         Future.doWhile(_scroll);
       }
