@@ -110,6 +110,7 @@ class Marquee extends StatefulWidget {
     Curve accelerationCurve = Curves.decelerate,
     this.decelerationDuration = Duration.zero,
     Curve decelerationCurve = Curves.decelerate,
+    this.onDone,
   })  : assert(!blankSpace.isNaN),
         assert(blankSpace >= 0, "The blankSpace needs to be positive or zero."),
         assert(blankSpace.isFinite),
@@ -483,6 +484,9 @@ class Marquee extends StatefulWidget {
   /// * [accelerationCurve], the equivalent for decelerating.
   final _IntegralCurve decelerationCurve;
 
+  /// The function that will be performed when all rounds are complete.
+  final Function? onDone;
+
   @override
   State<StatefulWidget> createState() => _MarqueeState();
 }
@@ -530,6 +534,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   Future<bool> _scroll() async {
     await _makeRoundTrip();
+    if (isDone) widget.onDone!();
     return _running && !isDone && _controller.hasClients;
   }
 
