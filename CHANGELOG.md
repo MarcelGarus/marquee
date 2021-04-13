@@ -1,3 +1,9 @@
+## 2.1.0
+
+* Add `onDone` property.
+* Fix bug of using the wrong padding and `startPosition` when you delay scrolling.
+* Thanks to @Jeferson505 and @emagnier
+
 ## 2.0.0
 
 * Migrate to null-safety.
