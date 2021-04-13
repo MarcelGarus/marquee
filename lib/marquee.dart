@@ -536,7 +536,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Future<bool> _scroll() async {
     await _makeRoundTrip();
     if (isDone && widget.onDone != null) {
-      widget.onDone!();
+      widget.onDone();
     }
     return _running && !isDone && _controller.hasClients;
   }
