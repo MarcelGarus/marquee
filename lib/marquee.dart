@@ -484,8 +484,9 @@ class Marquee extends StatefulWidget {
   /// * [accelerationCurve], the equivalent for decelerating.
   final _IntegralCurve decelerationCurve;
 
-  /// The function that will be performed when all rounds are complete.
-  final Function? onDone;
+  /// This function will be called if [numberOfRounds] is set and the [Marquee]
+  /// finished scrolled the specified number of rounds.
+  final VoidCallback? onDone;
 
   @override
   State<StatefulWidget> createState() => _MarqueeState();
@@ -534,7 +535,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
   Future<bool> _scroll() async {
     await _makeRoundTrip();
-    if (isDone) widget.onDone!();
+    if (isDone && widget.onDone != null) {
+      widget.onDone!();
+    }
     return _running && !isDone && _controller.hasClients;
   }
 
