@@ -95,6 +95,7 @@ class Marquee extends StatefulWidget {
     required this.text,
     this.style,
     this.textScaleFactor,
+    this.textDirection = TextDirection.ltr,
     this.scrollAxis = Axis.horizontal,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.blankSpace = 0.0,
@@ -189,6 +190,24 @@ class Marquee extends StatefulWidget {
   ///
   /// * [text] to provide the text itself.
   final double? textScaleFactor;
+
+  /// The text direction of the text to be displayed.
+  ///
+  /// ## Sample code
+  ///
+  /// This marquee has a RTL (Right-to-Left) text:
+  ///
+  /// ```dart
+  /// Marquee(
+  ///   text: 'טקסט בעברית',
+  ///   textDirection: TextDirection.rtl
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  /// * [text] to provide the text itself.
+  final TextDirection textDirection;
 
   /// The scroll axis.
   ///
@@ -706,6 +725,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     Widget marquee = ListView.builder(
       controller: _controller,
       scrollDirection: widget.scrollAxis,
+      reverse: widget.textDirection == TextDirection.rtl,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
