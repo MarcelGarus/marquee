@@ -1,9 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _useRtlText = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,19 +25,35 @@ class MyApp extends StatelessWidget {
             _buildComplexMarquee(),
           ].map(_wrapWithStuff).toList(),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              _useRtlText = !_useRtlText;
+            });
+          },
+          label: !_useRtlText ? const Text('Switch') : const Text('החלף'),
+          backgroundColor: Colors.pink,
+        ),
       ),
     );
   }
 
   Widget _buildMarquee() {
     return Marquee(
-      text: 'There once was a boy who told this story about a boy: "',
+      key: Key("$_useRtlText"),
+      text: !_useRtlText
+          ? 'There once was a boy who told this story about a boy: "'
+          : 'פעם היה ילד אשר סיפר סיפור על ילד:"',
+      velocity: 50.0,
     );
   }
 
   Widget _buildComplexMarquee() {
     return Marquee(
-      text: 'Some sample text that takes some space.',
+      key: Key("$_useRtlText"),
+      text: !_useRtlText
+          ? 'Some sample text that takes some space.'
+          : 'זהו משפט ראשון של הטקסט הארוך. זהו המשפט השני של הטקסט הארוך',
       style: TextStyle(fontWeight: FontWeight.bold),
       scrollAxis: Axis.horizontal,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,6 +69,7 @@ class MyApp extends StatelessWidget {
       accelerationCurve: Curves.linear,
       decelerationDuration: Duration(milliseconds: 500),
       decelerationCurve: Curves.easeOut,
+      textDirection: _useRtlText ? TextDirection.rtl : TextDirection.ltr,
     );
   }
 
