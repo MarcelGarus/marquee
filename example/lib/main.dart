@@ -26,7 +26,9 @@ class _MyAppState extends State<MyApp> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => setState(() => _useRtlText = !_useRtlText),
-          label: !_useRtlText ? const Text('Switch') : const Text('החלף'),
+          label: !_useRtlText
+              ? const Text('Switch to Hebrew')
+              : const Text('החלף לאנגלית'),
           backgroundColor: Colors.pink,
         ),
       ),
