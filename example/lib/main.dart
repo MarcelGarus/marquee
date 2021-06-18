@@ -26,11 +26,7 @@ class _MyAppState extends State<MyApp> {
           ].map(_wrapWithStuff).toList(),
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            setState(() {
-              _useRtlText = !_useRtlText;
-            });
-          },
+          onPressed: () => setState(() => _useRtlText = !_useRtlText),
           label: !_useRtlText ? const Text('Switch') : const Text('החלף'),
           backgroundColor: Colors.pink,
         ),
