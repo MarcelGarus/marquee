@@ -1,3 +1,8 @@
+## 2.2.0
+
+* Add support for right to left languages.
+* Thanks to @yanivshaked
+
 ## 2.1.0
 
 * Add `onDone` property.
