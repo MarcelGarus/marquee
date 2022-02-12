@@ -2,9 +2,9 @@ library marquee;
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
 
 /// A curve that represents the integral of another curve.
 ///
@@ -542,12 +542,14 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
       if (!_running) {
         _running = true;
-        _controller.jumpTo(_startPosition);
-        await Future<void>.delayed(widget.startAfter);
-        Future.doWhile(_scroll);
+        if (_controller.hasClients) {
+          _controller.jumpTo(_startPosition);
+          await Future<void>.delayed(widget.startAfter);
+          Future.doWhile(_scroll);
+        }
       }
     });
   }

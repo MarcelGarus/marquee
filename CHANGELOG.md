@@ -1,3 +1,8 @@
+## 2.2.1
+
+* Fix error: ScrollController not attached to any scroll views.
+* Thanks to @SergeyShustikov
+
 ## 2.2.0
 
 * Add support for right to left languages.
