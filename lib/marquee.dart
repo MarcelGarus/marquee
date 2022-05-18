@@ -91,7 +91,7 @@ class _IntegralCurve extends Curve {
 ///   scrolling and manual scrolling enabled.
 class Marquee extends StatefulWidget {
   Marquee({
-    Key? key,
+    super.key,
     required this.text,
     this.style,
     this.textScaleFactor,
@@ -145,8 +145,7 @@ class Marquee extends StatefulWidget {
           "isn't invented yet.",
         ),
         this.accelerationCurve = _IntegralCurve(accelerationCurve),
-        this.decelerationCurve = _IntegralCurve(decelerationCurve),
-        super(key: key);
+        this.decelerationCurve = _IntegralCurve(decelerationCurve);
 
   /// The text to be displayed.
   ///
@@ -542,7 +541,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!_running) {
         _running = true;
         if (_controller.hasClients) {

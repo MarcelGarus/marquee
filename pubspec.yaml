@@ -1,12 +1,13 @@
 name: marquee
-description: '⏩ A Flutter widget that scrolls text infinitely. Provides many
+description: 'A Flutter widget that scrolls text infinitely. Provides many
   customizations including custom scroll directions, durations, curves as well
   as pauses after every round.'
-version: 2.2.1
-repository: https://github.com/marcelgarus/marquee
+version: 2.2.2
+repository: https://github.com/MarcelGarus/marquee
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  flutter: '>=3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
   fading_edge_scrollview: ^2.0.0
