@@ -18,7 +18,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         backgroundColor: Colors.deepOrange,
         body: ListView(
-          padding: EdgeInsets.only(top: 50.0),
+          padding: EdgeInsets.only(top: 50),
           children: [
             _buildMarquee(),
             _buildComplexMarquee(),
@@ -54,14 +54,14 @@ class _MyAppState extends State<MyApp> {
       style: TextStyle(fontWeight: FontWeight.bold),
       scrollAxis: Axis.horizontal,
       crossAxisAlignment: CrossAxisAlignment.start,
-      blankSpace: 20.0,
-      velocity: 100.0,
+      blankSpace: 20,
+      velocity: 100,
       pauseAfterRound: Duration(seconds: 1),
       showFadingOnlyWhenScrolling: true,
       fadingEdgeStartFraction: 0.1,
       fadingEdgeEndFraction: 0.1,
       numberOfRounds: 3,
-      startPadding: 10.0,
+      startPadding: 10,
       accelerationDuration: Duration(seconds: 1),
       accelerationCurve: Curves.linear,
       decelerationDuration: Duration(milliseconds: 500),
@@ -72,8 +72,8 @@ class _MyAppState extends State<MyApp> {
 
   Widget _wrapWithStuff(Widget child) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Container(height: 50.0, color: Colors.white, child: child),
+      padding: EdgeInsets.all(16),
+      child: Container(height: 50, color: Colors.white, child: child),
     );
   }
 }
