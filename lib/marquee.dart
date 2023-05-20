@@ -733,9 +733,10 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
             ? Text(widget.text,
                 style: widget.style, textScaleFactor: widget.textScaleFactor)
             : _buildBlankSpace();
-        return alignment == null
-            ? text
-            : Align(alignment: alignment, child: text);
+        return RepaintBoundary(
+            child: alignment == null
+                ? text
+                : Align(alignment: alignment, child: text));
       },
     );
 
