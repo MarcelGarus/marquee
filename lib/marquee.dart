@@ -687,7 +687,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
 
     final constraints = BoxConstraints(maxWidth: double.infinity);
 
-    final richTextWidget = Text.rich(span).build(context) as RichText;
+    final richTextWidget =
+        Text.rich(span, textScaleFactor: widget.textScaleFactor).build(context)
+            as RichText;
     final renderObject = richTextWidget.createRenderObject(context);
     renderObject.layout(constraints);
 
