@@ -42,7 +42,6 @@ class _IntegralCurve extends Curve {
     for (final double t in values.keys) {
       values[t] = values[t]! / integral;
     }
-    ;
 
     return _IntegralCurve._(original, integral, values);
   }
@@ -57,7 +56,7 @@ class _IntegralCurve extends Curve {
       }
       ;
     }
-    ;
+
     return 1.0;
   }
 }
