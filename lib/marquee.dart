@@ -54,7 +54,6 @@ class _IntegralCurve extends Curve {
       if (key > t) {
         return _values[key]!;
       }
-      ;
     }
 
     return 1.0;
