@@ -103,7 +103,6 @@ class Marquee extends StatefulWidget {
     required this.text,
     this.style,
     this.textScaleFactor = 1.0,
-    // this.textScaler,
     this.textDirection = TextDirection.ltr,
     this.scrollAxis = Axis.horizontal,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -744,7 +743,6 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
             ? Text(
                 widget.text,
                 style: widget.style,
-                // textScaleFactor: widget.textScaleFactor,
                 textScaler: widget.textScaler,
               )
             : _buildBlankSpace();
