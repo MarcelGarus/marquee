@@ -39,7 +39,10 @@ class _IntegralCurve extends Curve {
     values[1.0] = integral;
 
     // Normalize.
-    for (final double t in values.keys) values[t] = values[t]! / integral;
+    for (final double t in values.keys) {
+      values[t] = values[t]! / integral;
+    }
+    ;
 
     return _IntegralCurve._(original, integral, values);
   }
@@ -48,7 +51,13 @@ class _IntegralCurve extends Curve {
   /// curve.
   double transform(double t) {
     if (t < 0) return 0.0;
-    for (final key in _values.keys) if (key > t) return _values[key]!;
+    for (final key in _values.keys) {
+      if (key > t) {
+        return _values[key]!;
+      }
+      ;
+    }
+    ;
     return 1.0;
   }
 }
