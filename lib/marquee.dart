@@ -103,7 +103,8 @@ class Marquee extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
-    this.textScaleFactor,
+    this.textScaleFactor = 1.0,
+    // this.textScaler,
     this.textDirection = TextDirection.ltr,
     this.scrollAxis = Axis.horizontal,
     this.crossAxisAlignment = CrossAxisAlignment.center,
@@ -154,7 +155,8 @@ class Marquee extends StatefulWidget {
           "isn't invented yet.",
         ),
         this.accelerationCurve = _IntegralCurve(accelerationCurve),
-        this.decelerationCurve = _IntegralCurve(decelerationCurve);
+        this.decelerationCurve = _IntegralCurve(decelerationCurve),
+        this.textScaler = TextScaler.linear(textScaleFactor);
 
   /// The text to be displayed.
   ///
@@ -197,7 +199,8 @@ class Marquee extends StatefulWidget {
   /// See also:
   ///
   /// * [text] to provide the text itself.
-  final double? textScaleFactor;
+  final double textScaleFactor;
+  final TextScaler textScaler;
 
   /// The text direction of the text to be displayed.
   ///
@@ -739,8 +742,12 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (_, i) {
         final text = i.isEven
-            ? Text(widget.text,
-                style: widget.style, textScaleFactor: widget.textScaleFactor)
+            ? Text(
+                widget.text,
+                style: widget.style,
+                // textScaleFactor: widget.textScaleFactor,
+                textScaler: widget.textScaler,
+              )
             : _buildBlankSpace();
         return alignment == null
             ? text
