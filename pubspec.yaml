@@ -10,7 +10,7 @@ environment:
   sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
-  fading_edge_scrollview: ^3.0.0
+  fading_edge_scrollview: ^4.1.1
   flutter:
     sdk: flutter
 
